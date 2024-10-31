@@ -3,22 +3,20 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private int scoreToWin = 3;
-    [SerializeField] private float timeToLoose = 30.0f;
     private float timeOfStart;
     private bool gameOver = false;
 
     void Start()
     {
-        ScoreManager.instance.OnScoreChanged += CheckScore;
+        HealthManager.Instance.OnHealthChanged += CheckHealth;
         timeOfStart = Time.time;
     }
-
-    private void CheckScore(int newScore)
+    
+    private void CheckHealth(float newHealth)
     {
-        if (newScore >= scoreToWin)
+        if (newHealth <= 0)
         {
-            GameWon();
+            GameLost();
         }
     }
 
@@ -31,7 +29,7 @@ public class GameManager : MonoBehaviour
 
     private void GameLost()
     {
-        ScoreManager.instance.OnScoreChanged -= CheckScore;
+        HealthManager.Instance.OnHealthChanged -= CheckHealth;
         gameOver = true;
         Debug.Log("GAME OVER");
         RestartGame();
@@ -42,11 +40,6 @@ public class GameManager : MonoBehaviour
     {
         if (gameOver)
             return;
-
-        if (Time.time - timeOfStart > timeToLoose)
-        {
-            GameLost();
-        }
     }
 
     private void RestartGame()
