@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        HealthManager.Instance.OnHealthChanged += CheckHealth;
+        PlayerManager.Instance.OnHealthChanged += CheckHealth;
         timeOfStart = Time.time;
     }
     
@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
 
     private void GameLost()
     {
-        HealthManager.Instance.OnHealthChanged -= CheckHealth;
+        PlayerManager.Instance.OnHealthChanged -= CheckHealth;
         gameOver = true;
         Debug.Log("GAME OVER");
         RestartGame();

@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,14 +13,10 @@ public class PlayerController : MonoBehaviour
 
     [Header("Options")]
     [SerializeField] private Animator animator;
-    [SerializeField] private float speed = 5.0f;
     [SerializeField] private CharacterController character;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform firePoint;
 
-    private Coroutine currentFireCoroutine;
-
-    private bool sprinting = false;
     public Vector2 MoveInputDirection => moveInputDirection;
     private Vector2 moveInputDirection;
     public Vector2 LookInputDirection => lookInputDirection;
@@ -31,8 +26,7 @@ public class PlayerController : MonoBehaviour
     {
         moveInputDirection = Vector2.zero;
         lookInputDirection = Vector2.zero;
-        
-       StartCoroutine(FireContinuously());
+        StartCoroutine(FireContinuously());
     }
 
     // appelé par PlayerInput
@@ -49,30 +43,30 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // Si l'input est "X", on met des dégâts au joueur (pour tester)
+        if (Keyboard.current.xKey.wasPressedThisFrame)
+        {
+            PlayerManager.Instance.TakeDamage(10);
+        }
         MovePlayerTopDown();
         LookAt();
     }
 
     void MovePlayerTopDown()
     {
-        // Move player in the direction of the input, not the direction where the player is looking
-        Vector3 moveDirection = new Vector3(moveInputDirection.x, 0, moveInputDirection.y);
-        moveDirection.Normalize(); // Normalize to prevent faster diagonal movement
-        Vector3 velocity = moveDirection * speed;
+        Vector3 moveDirection = new Vector3(moveInputDirection.x, 0, moveInputDirection.y).normalized;
+        Vector3 velocity = moveDirection * PlayerManager.Instance.moveSpeed;
         
         animator.SetFloat("Speed", velocity.magnitude);
-        
         character.Move(velocity * Time.deltaTime);
     }
     
     void LookAt()
     {
-        // Utiliser uniquement lookInputDirection pour orienter la vue
         Vector3 lookDirection = new Vector3(lookInputDirection.x, 0, lookInputDirection.y);
         
-        if (lookDirection.magnitude > 0.1f) // Ne modifier la rotation que si l'input est significatif
+        if (lookDirection.magnitude > 0.1f)
         {
-            // Définir uniquement la rotation du joueur
             transform.rotation = Quaternion.LookRotation(lookDirection, Vector3.up);
         }
     }
@@ -82,7 +76,7 @@ public class PlayerController : MonoBehaviour
         while (true)
         {
             FireProjectile();
-            yield return new WaitForSeconds(0.2f); // Intervalle entre chaque projectile
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
@@ -91,7 +85,7 @@ public class PlayerController : MonoBehaviour
         if (projectilePrefab != null && firePoint != null)
         {
             GameObject projectile = Instantiate(projectilePrefab, firePoint.position, transform.rotation);
-            projectile.GetComponent<Projectile>().speed = 15f; // Définir la vitesse du projectile
+            projectile.GetComponent<Projectile>().speed = 15f;
             animator.SetTrigger("Shoot");
         }
     }
