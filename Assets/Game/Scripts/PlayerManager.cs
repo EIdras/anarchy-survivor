@@ -14,6 +14,7 @@ public class PlayerManager : MonoBehaviour
     public float moveSpeed = 5.0f; // vitesse de déplacement
 
     public event Action<float> OnHealthChanged;
+    public event Action OnPlayerDeath;
     public event Action<int> OnExperienceChanged;
     public event Action<int> OnLevelUp;
 
@@ -68,6 +69,9 @@ public class PlayerManager : MonoBehaviour
     private void Die()
     {
         // Gestion de la mort du joueur
+        OnPlayerDeath?.Invoke();
         Debug.Log("Player has died");
     }
+    
+    
 }

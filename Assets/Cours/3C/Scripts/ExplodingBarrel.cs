@@ -4,7 +4,7 @@ public class ExplodingBarrel : MonoBehaviour
 {
     public void HitByPlayer()
     {
-        ScoreManager.instance.AddScore(1);
+        //ScoreManager.instance.AddScore(1);
         Destroy(gameObject);
     }
 }
