@@ -9,7 +9,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        PlayerManager.Instance.OnPlayerDeath += GameLost;
+        PlayerManager playerInstance = PlayerManager.Instance;
+        playerInstance.OnPlayerDeath += GameLost;
+        playerInstance.OnLevelUp += LevelUp;
         timeOfStart = Time.time;
     }
 
@@ -37,6 +39,12 @@ public class GameManager : MonoBehaviour
         int minutes = (int) gameTime / 60;
         int seconds = (int) gameTime % 60;
         timeText.text = minutes.ToString("00") + ":" + seconds.ToString("00");
+    }
+    
+    private void LevelUp(int level)
+    {
+        Debug.Log("LEVEL UP ! Now level " + level + ".");
+        PowerupPanelManager.Instance.ShowPowerupOptions();
     }
 
     private void RestartGame()

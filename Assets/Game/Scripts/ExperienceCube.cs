@@ -25,10 +25,9 @@ public class ExperienceCube : MonoBehaviour
 
     private void CheckPlayerDistance()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.instance.transform.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.Instance.transform.position);
         if (distanceToPlayer <= PlayerManager.Instance.collectionRadius)
         {
-            Debug.Log("Player is close enough to collect experience.");
             Collect();
         }
     }

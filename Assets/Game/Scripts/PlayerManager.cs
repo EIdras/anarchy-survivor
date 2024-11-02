@@ -53,7 +53,7 @@ public class PlayerManager : MonoBehaviour
         experience += amount;
         OnExperienceChanged?.Invoke(experience);
 
-        if (experience >= level * 100) // Ex: chaque niveau requiert 100 points * le niveau actuel
+        if (experience >= level * 10) // Ex: chaque niveau requiert 100 points * le niveau actuel
         {
             LevelUp();
         }

@@ -106,7 +106,7 @@ public class Enemy_With_FSM : MonoBehaviour
 
     void Start()
     {
-        player = PlayerController.instance;
+        player = PlayerController.Instance;
 
         fsm.Add(new EnemyIdling(this));
         fsm.Add(new EnemySearching(this));

@@ -10,7 +10,7 @@ public class Enemy_Simple : MonoBehaviour
 
     void Start()
     {
-        player = PlayerController.instance;
+        player = PlayerController.Instance;
     }
 
 

@@ -4,11 +4,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public static PlayerController instance;
+    public static PlayerController Instance;
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
 
     [Header("Options")]
@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CharacterController character;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform firePoint;
+    [SerializeField] private PlayerInput playerInput;
 
     public Vector2 MoveInputDirection => moveInputDirection;
     private Vector2 moveInputDirection;
@@ -27,6 +28,16 @@ public class PlayerController : MonoBehaviour
         moveInputDirection = Vector2.zero;
         lookInputDirection = Vector2.zero;
         StartCoroutine(FireContinuously());
+    }
+    
+    public void EnableControl(bool enable)
+    {
+        playerInput.enabled = enable;
+    }
+    
+    public PlayerInput GetPlayerInput()
+    {
+        return playerInput;
     }
 
     // appelé par PlayerInput

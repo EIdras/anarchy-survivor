@@ -14,7 +14,7 @@ public class Enemy_With_BehaviorTree : MonoBehaviour
 
     void Start()
     {
-        player = PlayerController.instance;
+        player = PlayerController.Instance;
 
         tree = new BehaviorTreeBuilder(gameObject)
             .Selector("Enemy BT")
