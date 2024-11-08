@@ -31,11 +31,36 @@ public class DynamicSpawner : MonoBehaviour
             cube.SetActive(false);
             experienceCubesPool.Add(cube);
         }
+
+        // Spawn initial dans la zone active
+        InitialSpawnInActiveZone();
     }
 
     private void Update()
     {
         ManageSpawnZones();
+    }
+
+    private void InitialSpawnInActiveZone()
+    {
+        int cubesToSpawn = Mathf.Min(maxExperienceCubes, 20); // Limite le nombre de cubes pour éviter un spawn excessif
+
+        for (int i = 0; i < cubesToSpawn; i++)
+        {
+            Vector2 spawnPosition2D = GetRandomPositionInActiveRadius();
+            if (IsPositionValid(spawnPosition2D))
+            {
+                ActivateCube(spawnPosition2D);
+            }
+        }
+    }
+
+    private Vector2 GetRandomPositionInActiveRadius()
+    {
+        // Choisit une position aléatoire dans la zone active en 2D
+        Vector2 randomOffset = Random.insideUnitCircle * activeRadius;
+        Vector2 playerPosition2D = new Vector2(player.position.x, player.position.z);
+        return playerPosition2D + randomOffset;
     }
 
     private void ManageSpawnZones()
@@ -72,7 +97,6 @@ public class DynamicSpawner : MonoBehaviour
             }
         }
     }
-
 
     private Vector2 GetRandomPositionOutsideActiveRadius()
     {
@@ -128,7 +152,6 @@ public class DynamicSpawner : MonoBehaviour
         }
     }
 
-
     private CubeType GetRandomCubeType()
     {
         if (cubeTypes == null || cubeTypes.Count == 0)
@@ -166,14 +189,13 @@ public class DynamicSpawner : MonoBehaviour
         return cubeTypes[0];
     }
 
-
     private void OnDrawGizmos()
     {
         if (player != null)
         {
             Vector3 playerPosition = player.position;
             Vector3 playerPosition2D = new Vector3(playerPosition.x, 0, playerPosition.z);
-            
+
             // Couleur de la zone active (vert)
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(playerPosition2D, activeRadius);
