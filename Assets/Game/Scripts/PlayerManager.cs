@@ -15,7 +15,7 @@ public class PlayerManager : MonoBehaviour
 
     public event Action<float> OnHealthChanged;
     public event Action OnPlayerDeath;
-    public event Action<int> OnExperienceChanged;
+    public event Action<int, int> OnExperienceChanged;
     public event Action<int> OnLevelUp;
 
     private void Awake()
@@ -51,7 +51,8 @@ public class PlayerManager : MonoBehaviour
     public void AddExperience(int amount)
     {
         experience += amount;
-        OnExperienceChanged?.Invoke(experience);
+        int experienceRequiredToLevelUp = level * 10;
+        OnExperienceChanged?.Invoke(experience, experienceRequiredToLevelUp);
 
         if (experience >= level * 10) // Ex: chaque niveau requiert 100 points * le niveau actuel
         {
@@ -73,5 +74,5 @@ public class PlayerManager : MonoBehaviour
         Debug.Log("Player has died");
     }
     
-    
+
 }

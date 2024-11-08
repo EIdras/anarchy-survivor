@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
         {
             GameObject projectile = Instantiate(projectilePrefab, firePoint.position, transform.rotation);
             projectile.GetComponent<Projectile>().speed = 15f;
-            animator.SetTrigger("Shoot");
+            // animator.SetTrigger("Shoot");
         }
     }
 }

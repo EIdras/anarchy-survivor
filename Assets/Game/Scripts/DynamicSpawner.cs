@@ -109,7 +109,7 @@ public class DynamicSpawner : MonoBehaviour
             cube.GetComponent<ExperienceCube>().SetExperienceValue(cubeType.experienceValue);
 
             // Place le cube sur le plan XZ
-            cube.transform.position = new Vector3(position2D.x, 0, position2D.y);
+            cube.transform.position = new Vector3(position2D.x, experienceCubePrefab.transform.position.y, position2D.y);
             cube.SetActive(true);
             activeCubes.Add(cube);
         }

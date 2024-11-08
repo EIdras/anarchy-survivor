@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using System;
 
 public class PowerupPanelManager : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class PowerupPanelManager : MonoBehaviour
 
     private List<GameObject> activeCards = new List<GameObject>();
     private PlayerInput playerInput;
+
+    public event Action<PowerupCard> OnSelectPowerup;
 
     private void Awake()
     {
@@ -80,7 +83,7 @@ public class PowerupPanelManager : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             if (copyOfAvailable.Count == 0) break;
-            int index = Random.Range(0, copyOfAvailable.Count);
+            int index = UnityEngine.Random.Range(0, copyOfAvailable.Count);
             selectedPowerups.Add(copyOfAvailable[index]);
             copyOfAvailable.RemoveAt(index);
         }
@@ -104,6 +107,7 @@ public class PowerupPanelManager : MonoBehaviour
             {
                 Debug.Log("Power-up selected: " + card.nameText.text);
                 HidePanel();
+                OnSelectPowerup?.Invoke(card);
             }
         }
     }
