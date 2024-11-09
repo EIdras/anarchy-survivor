@@ -571,6 +571,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   experienceBar: {fileID: 240542250}
+  barHeight: 10
 --- !u!4 &246824054 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a3eab4bd197a3ce4db312a7d8298b5d2, type: 3}
@@ -3751,6 +3752,7 @@ GameObject:
   - component: {fileID: 1607862366}
   - component: {fileID: 1607862365}
   - component: {fileID: 1607862367}
+  - component: {fileID: 1607862368}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3813,6 +3815,33 @@ MonoBehaviour:
   - experienceValue: 10
     color: {r: 1, g: 0, b: 0, a: 0}
     spawnChance: 0.04
+--- !u!114 &1607862368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607862364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6472c7475eb87d4fa98184bfd11b658, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyPrefab: {fileID: 1691848569034769354, guid: 840f0a83cc98c604a875b51b8357bf7e, type: 3}
+  player: {fileID: 3387471603348769763}
+  spawnRadius: 40
+  maxEnemies: 500
+  enemyTypes:
+  - health: 10
+    speed: 2
+    color: {r: 0.8085625, g: 1, b: 0, a: 0}
+    spawnChance: 0.9
+  - health: 30
+    speed: 3
+    color: {r: 1, g: 0.63928205, b: 0, a: 0}
+    spawnChance: 0.1
+  playerLevel: 1
+  baseSpawnInterval: 2
 --- !u!4 &1623848544 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 09fb30255db1db34a8683a088b07e4be, type: 3}
@@ -5658,6 +5687,7 @@ GameObject:
   - component: {fileID: 3387471603348769764}
   - component: {fileID: 3387471603348769765}
   - component: {fileID: 3387471603348769767}
+  - component: {fileID: 3387471603348769769}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -6160,8 +6190,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 3387471603348769764}
   character: {fileID: 3387471603348769765}
-  projectilePrefab: {fileID: 8211394683089656339, guid: 2ccca60d775854c4ab67a9f5e2505d64, type: 3}
-  firePoint: {fileID: 974356509}
   playerInput: {fileID: 3387471603348769767}
 --- !u!114 &3387471603348769767
 MonoBehaviour:
@@ -6222,6 +6250,22 @@ MonoBehaviour:
   level: 1
   collectionRadius: 2
   moveSpeed: 5
+--- !u!114 &3387471603348769769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2614735224782967129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06cac1fc234a7f24b8eba25046ca59a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 10
+  fireRate: 1
+  projectilePrefab: {fileID: 8211394683089656339, guid: 2ccca60d775854c4ab67a9f5e2505d64, type: 3}
+  firePoint: {fileID: 974356509}
 --- !u!1 &3394842663970768047
 GameObject:
   m_ObjectHideFlags: 0

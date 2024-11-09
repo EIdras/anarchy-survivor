@@ -14,8 +14,6 @@ public class PlayerController : MonoBehaviour
     [Header("Options")]
     [SerializeField] private Animator animator;
     [SerializeField] private CharacterController character;
-    [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private Transform firePoint;
     [SerializeField] private PlayerInput playerInput;
 
     public Vector2 MoveInputDirection => moveInputDirection;
@@ -27,7 +25,6 @@ public class PlayerController : MonoBehaviour
     {
         moveInputDirection = Vector2.zero;
         lookInputDirection = Vector2.zero;
-        StartCoroutine(FireContinuously());
     }
     
     public void EnableControl(bool enable)
@@ -54,11 +51,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // Si l'input est "X", on met des dégâts au joueur (pour tester)
-        if (Keyboard.current.xKey.wasPressedThisFrame)
-        {
-            PlayerManager.Instance.TakeDamage(10);
-        }
         MovePlayerTopDown();
         LookAt();
     }
@@ -81,23 +73,5 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(lookDirection, Vector3.up);
         }
     }
-
-    IEnumerator FireContinuously()
-    {
-        while (true)
-        {
-            FireProjectile();
-            yield return new WaitForSeconds(0.2f);
-        }
-    }
-
-    void FireProjectile()
-    {
-        if (projectilePrefab != null && firePoint != null)
-        {
-            GameObject projectile = Instantiate(projectilePrefab, firePoint.position, transform.rotation);
-            projectile.GetComponent<Projectile>().speed = 15f;
-            // animator.SetTrigger("Shoot");
-        }
-    }
+    
 }
