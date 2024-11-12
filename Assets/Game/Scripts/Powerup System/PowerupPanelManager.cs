@@ -1,9 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections.Generic;
-using System;
 
 public class PowerupPanelManager : MonoBehaviour
 {
@@ -15,8 +13,6 @@ public class PowerupPanelManager : MonoBehaviour
 
     private List<GameObject> activeCards = new List<GameObject>();
     private PlayerInput playerInput;
-
-    public event Action<PowerupCard> OnSelectPowerup;
 
     private void Awake()
     {
@@ -43,23 +39,29 @@ public class PowerupPanelManager : MonoBehaviour
 
         PlayerController.Instance.EnableControl(false);
 
+        // Nettoyage des cartes existantes
         foreach (Transform child in cardContainer)
         {
             Destroy(child.gameObject);
         }
         activeCards.Clear();
 
+        // Sélectionner 3 power-ups aléatoires
         List<PowerupData> selectedPowerups = GetRandomPowerups(3);
-        
-        foreach (var powerup in selectedPowerups)
+        foreach (var powerupData in selectedPowerups)
         {
             GameObject card = Instantiate(powerupCardPrefab, cardContainer);
-            card.GetComponent<PowerupCard>().Setup(powerup);
+            var cardComponent = card.GetComponent<PowerupCard>();
+            int level = PowerupManager.Instance.GetPowerUpLevel(powerupData);
+            cardComponent.Setup(powerupData, level + 1); // Proposer un niveau supérieur à ce que le joueur possède
             activeCards.Add(card);
         }
 
         // Active la première carte pour la navigation via l'Event System
-        EventSystem.current.SetSelectedGameObject(activeCards[0]);
+        if (activeCards.Count > 0)
+        {
+            EventSystem.current.SetSelectedGameObject(activeCards[0]);
+        }
 
         // Active l'écoute de l'action "Submit" pour la validation
         playerInput.actions["Submit"].performed += OnSelect;
@@ -83,7 +85,7 @@ public class PowerupPanelManager : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             if (copyOfAvailable.Count == 0) break;
-            int index = UnityEngine.Random.Range(0, copyOfAvailable.Count);
+            int index = Random.Range(0, copyOfAvailable.Count);
             selectedPowerups.Add(copyOfAvailable[index]);
             copyOfAvailable.RemoveAt(index);
         }
@@ -93,7 +95,6 @@ public class PowerupPanelManager : MonoBehaviour
 
     private void OnSelect(InputAction.CallbackContext context)
     {
-        // Valide la carte sélectionnée dans l'Event System
         SelectPowerup();
     }
 
@@ -106,8 +107,8 @@ public class PowerupPanelManager : MonoBehaviour
             if (card != null)
             {
                 Debug.Log("Power-up selected: " + card.nameText.text);
+                PowerupManager.Instance.AddOrUpgradePowerUp(card.powerupData); // Ajouter ou mettre à jour le power-up
                 HidePanel();
-                OnSelectPowerup?.Invoke(card);
             }
         }
     }

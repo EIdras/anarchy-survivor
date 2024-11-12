@@ -18,33 +18,33 @@ public class ExperienceBarUpdater : MonoBehaviour
         experienceBar.rectTransform.sizeDelta = new Vector2(0, barHeight);
     }
 
-    // S'abonner aux événements de PlayerManager lorsque le joueur récupère de l'expérience
+    // S'abonner aux Ã©vÃ©nements de PlayerManager lorsque le joueur rÃ©cupÃ¨re de l'expÃ©rience
     private void OnEnable()
     {
         playerManager.OnExperienceChanged += UpdateExperienceBar;
-        powerupPanelManager.OnSelectPowerup += OnSelectPowerup;
+        playerManager.OnLevelUp += ResetBarWhenLevelUp;
     }
 
-    // Se désabonner des événements de PlayerManager lorsque le script est désactivé
+    // Se dÃ©sabonner des Ã©vÃ©nements de PlayerManager lorsque le script est dÃ©sactivÃ©
     private void OnDisable()
     {
         playerManager.OnExperienceChanged -= UpdateExperienceBar;
     }
 
-    // Mettre à jour la barre d'expérience
+    // Mettre Ã  jour la barre d'expÃ©rience
     private void UpdateExperienceBar(int experience, int experienceRequiredToLevelUp)
     {
-        // XP * largeur écran / XP nécessaire pour le prochain niveau
+        // XP * largeur Ã©cran / XP nÃ©cessaire pour le prochain niveau
         experienceBar.rectTransform.sizeDelta = new Vector2(experience * Screen.width / experienceRequiredToLevelUp, barHeight);
+    }
+    
+    private void ResetBarWhenLevelUp(int level)
+    {
+        ResetExperienceBar();
     }
 
     private void ResetExperienceBar()
     {
         experienceBar.rectTransform.sizeDelta = new Vector2(0, barHeight);
-    }
-
-    private void OnSelectPowerup(PowerupCard powerupCard)
-    {
-        ResetExperienceBar();
     }
 }

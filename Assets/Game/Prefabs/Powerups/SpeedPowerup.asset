@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: da63599f6d4938a498a729963cd5bddd, type: 3}
-  m_Name: Fireball
+  m_Name: SpeedPowerup
   m_EditorClassIdentifier: 
-  powerupName: Fireball
+  powerupName: Speed
   icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  description: Lorem ipsum dolor sit amet conjectur
-  level: 1
+  description: Increases player's movement speed
+  effect: {fileID: 11400000, guid: 85a187145b2559b45b3927edbc5025cf, type: 2}
   rarity: 0

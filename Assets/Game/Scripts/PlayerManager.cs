@@ -12,6 +12,8 @@ public class PlayerManager : MonoBehaviour
     public int level = 1;
     public float collectionRadius = 3.0f; // portée de collecte
     public float moveSpeed = 5.0f; // vitesse de déplacement
+    public Weapon weapon;
+    public float passiveRegen = 0.0f; // régénération passive
 
     public event Action<float> OnHealthChanged;
     public event Action OnPlayerDeath;

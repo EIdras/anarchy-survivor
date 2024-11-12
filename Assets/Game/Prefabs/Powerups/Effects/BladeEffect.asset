@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da63599f6d4938a498a729963cd5bddd, type: 3}
-  m_Name: Swords
+  m_Script: {fileID: 11500000, guid: 9b2e382cb031b754d943dc90790e768e, type: 3}
+  m_Name: BladeEffect
   m_EditorClassIdentifier: 
-  powerupName: Swords
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  description: Lorem ipsum dolor sit amet conjectur
-  level: 1
-  rarity: 1
+  bladePrefab: {fileID: 8630796023302702909, guid: ab0f3712d9d9a8d47909a0f0216d7976, type: 3}
+  bladeCount: 3
+  rotationSpeed: 100

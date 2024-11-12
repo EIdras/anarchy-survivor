@@ -1,16 +1,16 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewPowerup", menuName = "Powerups/Powerup")]
+[CreateAssetMenu(fileName = "NewPowerup", menuName = "Powerups/Powerup Data")]
 public class PowerupData : ScriptableObject
 {
     public string powerupName;
     public Sprite icon;
     public string description;
-    public int level = 1;
-    public PowerupRarity rarity;
+    public PowerupEffect effect; // Effet associé au power-up
+    public PowerUpRarity rarity;
 }
 
-public enum PowerupRarity
+public enum PowerUpRarity
 {
     Common,
     Rare,
