@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -6,11 +7,44 @@ public class Enemy : MonoBehaviour
     private float health;
     private float speed;
 
+    private List<Color> originalColor_head;
+    private List<Color> originalColor_body;
+    public Color damageColor = Color.red;
+    public float damageColorDuration = 0.2f;
+
+    GameObject body;
+    GameObject head;
+    SkinnedMeshRenderer bodyRenderer;
+    SkinnedMeshRenderer headRenderer;
+
     public void Initialize(int health, float speed, Transform player)
     {
         this.health = health;
         this.speed = speed;
         this.player = player;
+
+        InitializeColors();
+    }
+
+    private void InitializeColors()
+    {
+        body = gameObject.transform.GetChild(0).gameObject;
+        head = gameObject.transform.GetChild(1).gameObject;
+        bodyRenderer = body.GetComponent<SkinnedMeshRenderer>();
+        headRenderer = head.GetComponent<SkinnedMeshRenderer>();
+
+        originalColor_body = new List<Color>();
+        originalColor_head = new List<Color>();
+
+        // Ajout de couleurs à la liste
+        foreach (Material mat in bodyRenderer.materials)
+        {
+            originalColor_body.Add(mat.color);
+        }
+        foreach (Material mat in headRenderer.materials)
+        {
+            originalColor_head.Add(mat.color);
+        }
     }
 
     public void MoveTowardsPlayer()
@@ -31,9 +65,46 @@ public class Enemy : MonoBehaviour
         if (health <= 0)
         {
             gameObject.SetActive(false); // Ajoute l'ennemi au pool pour réutilisation
+
+            // Ajoute de l'expérience au joueur
+            PlayerManager.Instance.AddExperience(5); // TODO : Remplacer la valeur fixe par une valeur qui change en fonction de l'ennemi
+        }
+        else
+        {
+            // Animation de dégat   
+            StartCoroutine(ShowDamageEffect());
         }
     }
-    
+
+    private System.Collections.IEnumerator ShowDamageEffect()
+    {
+        bodyRenderer.material.color = damageColor;
+        headRenderer.material.color = damageColor;
+
+        //change la couleur de tous des materiaux des SkinnedMeshRenderer
+        foreach (Material mat in bodyRenderer.materials)
+        {
+            mat.color = damageColor;
+        }
+        foreach (Material mat in headRenderer.materials)
+        {
+            mat.color = damageColor;
+        }
+
+        yield return new WaitForSeconds(damageColorDuration);
+
+        // Restaurer la couleur originale
+        for (int i = 0; i < bodyRenderer.materials.Length; i++)
+        {
+            bodyRenderer.materials[i].color = originalColor_body[i];
+        }
+        for (int i = 0; i < headRenderer.materials.Length; i++)
+        {
+            headRenderer.materials[i].color = originalColor_head[i];
+        }
+    }
+
+
     // Gizmos pour visualiser la portée de spawn des ennemis
     private void OnDrawGizmos()
     {
