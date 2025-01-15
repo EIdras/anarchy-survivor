@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DynamicSpawner : MonoBehaviour
+public class ExperienceCubeSpawner : MonoBehaviour
 {
     public GameObject experienceCubePrefab;
     public Transform player;
