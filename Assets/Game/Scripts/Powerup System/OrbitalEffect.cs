@@ -4,7 +4,6 @@ using UnityEngine;
 public class OrbitalEffect : PowerupEffect
 {
     public GameObject bladePrefab;
-    public int baseBladeCount = 3;
     public float rotationSpeed = 100f;
 
     public override void Activate(GameObject player, int level)
@@ -14,9 +13,8 @@ public class OrbitalEffect : PowerupEffect
         {
             orbital = player.AddComponent<PlayerOrbital>();
         }
-
-        int currentBladeCount = baseBladeCount + (level - 1); // Calcule le nombre de lames en fonction du niveau
-        orbital.Activate(bladePrefab, currentBladeCount, rotationSpeed);
+        
+        orbital.Activate(bladePrefab, level, rotationSpeed);
     }
     
 }

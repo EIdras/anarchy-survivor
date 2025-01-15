@@ -5,6 +5,7 @@ public class Weapon : MonoBehaviour
 {
     public float damage = 10f;        // Dégâts par projectile
     public float fireRate = 1f;       // Cadence de tir en tirs par seconde
+    public float projectileSpeed = 10f; // Vitesse des projectiles
     public GameObject projectilePrefab; // Prefab du projectile
     public Transform firePoint;       // Point de départ des projectiles
 
@@ -62,6 +63,7 @@ public class Weapon : MonoBehaviour
             if (projScript != null)
             {
                 projScript.SetDamage(damage);
+                projScript.speed = projectileSpeed;
             }
         }
     }

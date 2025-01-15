@@ -30,6 +30,8 @@ public class Projectile : MonoBehaviour
         {
             enemy.TakeDamage(damage);
             Destroy(gameObject); // Détruire le projectile après l'impact
+            // TODO : Ajouter des effets visuels ou sonores
+            // TODO : Ne pas détruire le projectile suivant le piercing (powerup à créer)
         }
     }
 }

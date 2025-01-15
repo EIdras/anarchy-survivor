@@ -4,14 +4,16 @@ using UnityEngine;
 public class PlayerOrbital : MonoBehaviour
 {
     private List<GameObject> orbitals = new List<GameObject>();
-    private int bladeCount;
+    private const int BaseObjectCount = 3;
+    private int objectCount;
     private float rotationSpeed;
     private GameObject orbitalCenter; // Centre de rotation pour les lames
 
-    public void Activate(GameObject bladePrefab, int count, float speed)
+    public void Activate(GameObject bladePrefab, int level, float speed)
     {
-        Debug.Log("Orbital activation : " + count + " blades, speed " + speed);
-        bladeCount = count;
+        int count = BaseObjectCount + (level - 1);
+        Debug.Log("Orbital activation : " + count + " objects, speed " + speed);
+        objectCount = count;
         rotationSpeed = speed;
 
         // Si orbitalCenter n'existe pas, le créer
@@ -31,11 +33,13 @@ public class PlayerOrbital : MonoBehaviour
         orbitals.Clear();
 
         // Crée de nouvelles lames autour du centre orbital
-        for (int i = 0; i < bladeCount; i++)
+        for (int i = 0; i < objectCount; i++)
         {
-            float angle = i * Mathf.PI * 2 / bladeCount;
+            float angle = i * Mathf.PI * 2 / objectCount;
             Vector3 position = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * 2;
             GameObject blade = Instantiate(bladePrefab, orbitalCenter.transform.position + position, Quaternion.identity, orbitalCenter.transform);
+            blade.transform.LookAt(transform.position); // Pointe la lame vers le joueur
+            blade.AddComponent<OrbitalBlade>().Initialize(this); // Ajoute le script OrbitalBlade
             orbitals.Add(blade);
         }
     }
@@ -50,7 +54,7 @@ public class PlayerOrbital : MonoBehaviour
         // Faire tourner les lames autour du centre orbital
         for (int i = 0; i < orbitals.Count; i++)
         {
-            float angle = i * Mathf.PI * 2 / bladeCount + Time.time * rotationSpeed * Mathf.Deg2Rad;
+            float angle = i * Mathf.PI * 2 / objectCount + Time.time * rotationSpeed * Mathf.Deg2Rad;
             Vector3 position = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * 2;
             orbitals[i].transform.position = orbitalCenter.transform.position + position;
             orbitals[i].transform.LookAt(orbitals[i].transform.position + position); // Orienter la lame vers l'extérieur

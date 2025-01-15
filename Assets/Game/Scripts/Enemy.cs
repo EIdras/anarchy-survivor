@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class Enemy : MonoBehaviour
     private Transform player;
     private float health;
     private float speed;
+    private float damageToPlayer = 10f;
 
     private List<Color> originalColor_head;
     private List<Color> originalColor_body;
@@ -17,11 +19,12 @@ public class Enemy : MonoBehaviour
     SkinnedMeshRenderer bodyRenderer;
     SkinnedMeshRenderer headRenderer;
 
-    public void Initialize(int health, float speed, Transform player)
+    public void Initialize(int health, float speed, float damage, Transform player)
     {
         this.health = health;
         this.speed = speed;
         this.player = player;
+        this.damageToPlayer = damage;
 
         InitializeColors();
     }
@@ -51,10 +54,14 @@ public class Enemy : MonoBehaviour
     {
         if (player != null)
         {
-            Vector3 direction = (player.position - transform.position).normalized;
-            transform.position += direction * speed * Time.deltaTime;
-            // Regarde le joueur
-            transform.LookAt(player);
+            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+            if (distanceToPlayer > 0.1f)
+            {
+                Vector3 direction = (player.position - transform.position).normalized;
+                transform.position += direction * speed * Time.deltaTime;
+                // Regarde le joueur
+                transform.LookAt(player);
+            }
         }
     }
 
@@ -67,7 +74,7 @@ public class Enemy : MonoBehaviour
             gameObject.SetActive(false); // Ajoute l'ennemi au pool pour réutilisation
 
             // Ajoute de l'expérience au joueur
-            PlayerManager.Instance.AddExperience(5); // TODO : Remplacer la valeur fixe par une valeur qui change en fonction de l'ennemi
+            PlayerManager.Instance.AddExperience((int)health % 4);
         }
         else
         {
@@ -101,6 +108,24 @@ public class Enemy : MonoBehaviour
         for (int i = 0; i < headRenderer.materials.Length; i++)
         {
             headRenderer.materials[i].color = originalColor_head[i];
+        }
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player")) // Assurez-vous que le joueur a le tag "Player"
+        {
+            PlayerManager.Instance.TakeDamage(damageToPlayer);
+            Debug.Log($"Enemy hit the player, dealt {damageToPlayer} damage.");
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        // Si l'ennemi reste en collision avec le joueur, il continue à lui infliger des dégâts
+        if (other.CompareTag("Player"))
+        {
+            PlayerManager.Instance.TakeDamage(damageToPlayer * Time.deltaTime);
         }
     }
 

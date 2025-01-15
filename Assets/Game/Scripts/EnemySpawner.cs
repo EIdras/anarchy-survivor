@@ -16,6 +16,7 @@ public class EnemySpawner : MonoBehaviour
         public float speed;
         public Color color;
         public float spawnChance;
+        public float baseDamage;
     }
 
     public List<EnemyType> enemyTypes;
@@ -28,6 +29,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
+        // Initialisation du pool d'ennemis
         for (int i = 0; i < maxEnemies; i++)
         {
             GameObject enemy = Instantiate(enemyPrefab);
@@ -118,6 +120,11 @@ public class EnemySpawner : MonoBehaviour
             enemyPool.RemoveAt(0);
 
             EnemyType enemyType = GetRandomEnemyTypeBasedOnLevel();
+
+            // Détermine les dégâts de l'ennemi en fonction de son niveau
+            float damage = enemyType.baseDamage * (1 + playerLevel * 0.2f);
+
+            // Configure l'ennemi
             GameObject body = enemy.transform.GetChild(0).gameObject;
             GameObject head = enemy.transform.GetChild(1).gameObject;
             SkinnedMeshRenderer bodyRenderer = body.GetComponent<SkinnedMeshRenderer>();
@@ -125,7 +132,8 @@ public class EnemySpawner : MonoBehaviour
             bodyRenderer.materials[2].color = enemyType.color;
             headRenderer.materials[2].color = enemyType.color;
 
-            enemy.GetComponent<Enemy>().Initialize(enemyType.health, enemyType.speed, player);
+            enemy.GetComponent<Enemy>().Initialize(enemyType.health, enemyType.speed, damage, player);
+
             enemy.transform.position = new Vector3(position2D.x, 0, position2D.y);
             enemy.SetActive(true);
             activeEnemies.Add(enemy);
@@ -155,7 +163,14 @@ public class EnemySpawner : MonoBehaviour
         foreach (var enemyType in enemyTypes)
         {
             float adjustedChance = enemyType.spawnChance * (1 + playerLevel * 0.05f);
-            weightedTypes.Add(new EnemyType { health = enemyType.health, speed = enemyType.speed, color = enemyType.color, spawnChance = adjustedChance });
+            weightedTypes.Add(new EnemyType
+            {
+                health = enemyType.health,
+                speed = enemyType.speed,
+                color = enemyType.color,
+                spawnChance = adjustedChance,
+                baseDamage = enemyType.baseDamage
+            });
             totalChance += adjustedChance;
         }
 
