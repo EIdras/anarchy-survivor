@@ -14,8 +14,9 @@ public class Enemy : MonoBehaviour
     public Color damageColor = Color.red;
     public float damageColorDuration = 0.2f;
     public GameObject experienceCubePrefab;
-    public float dropChance = 0.1f; // 10% de chance de drop par défaut
-    public int expAmount;
+    private float dropChance = 0.1f; // 10% de chance de drop par défaut
+    private int expAmount;
+    public ParticleSystem hitParticlesPrefab;
 
     GameObject body;
     GameObject head;
@@ -80,13 +81,42 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            // Animation de dégat   
             StartCoroutine(ShowDamageEffect());
+        }
+    }
+
+    private void PlayHitParticles()
+    {
+        PlayBloodParticles(5, 10);
+    }
+    
+    private void PlayDeathParticles()
+    {
+        PlayBloodParticles(30, 40);
+    }
+    
+    private void PlayBloodParticles(int min, int max)
+    {
+        if (hitParticlesPrefab != null)
+        {
+            // Instancie les particules à la position de l'ennemi
+            ParticleSystem bloodParticles = Instantiate(hitParticlesPrefab, transform.position, Quaternion.identity);
+            var emission = bloodParticles.emission;
+            var burst = emission.GetBurst(0);
+            burst.count = new ParticleSystem.MinMaxCurve(min, max); // Plus de particules pour la mort
+            emission.SetBurst(0, burst);
+            
+            bloodParticles.Play();
+            
+           
+            // Détruire automatiquement les particules une fois l'animation terminée
+            Destroy(bloodParticles.gameObject, bloodParticles.main.duration + bloodParticles.main.startLifetime.constant);
         }
     }
 
     private void HandleDeath()
     {
+        PlayDeathParticles();
         gameObject.SetActive(false); // Ajoute l'ennemi au pool pour réutilisation
 
         // Calcul de la probabilité d'apparition d'un cube rare
@@ -99,6 +129,7 @@ public class Enemy : MonoBehaviour
     
     private System.Collections.IEnumerator ShowDamageEffect()
     {
+        PlayHitParticles();
         bodyRenderer.material.color = damageColor;
         headRenderer.material.color = damageColor;
 
