@@ -14,6 +14,7 @@ public class PlayerManager : MonoBehaviour
     public float moveSpeed = 5.0f; // vitesse de déplacement
     public Weapon weapon;
     public float passiveRegen = 0.0f; // régénération passive
+    public PlayerShield shield;
 
     public event Action<float> OnHealthChanged;
     public event Action OnPlayerDeath;
@@ -34,6 +35,11 @@ public class PlayerManager : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (shield.isShieldTanking())
+        {
+            shield.TakeHit();
+            return;
+        }
         health -= damage;
         health = Mathf.Clamp(health, 0, 100);
         OnHealthChanged?.Invoke(health);
@@ -75,6 +81,11 @@ public class PlayerManager : MonoBehaviour
         OnPlayerDeath?.Invoke();
         Debug.Log("Player has died");
     }
-    
 
+    private void OnDrawGizmos()
+    {
+        // afficher la portée de collecte
+        Gizmos.color = Color.gray;
+        Gizmos.DrawWireSphere(transform.position, collectionRadius);
+    }
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SpeedPowerup
   m_EditorClassIdentifier: 
   powerupName: Speed
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  emoji: "\U0001F45F"
   description: Increases player's movement speed
   effect: {fileID: 11400000, guid: 85a187145b2559b45b3927edbc5025cf, type: 2}
   rarity: 0

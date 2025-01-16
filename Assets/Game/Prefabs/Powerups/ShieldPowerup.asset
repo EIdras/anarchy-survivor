@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: ShieldPowerup
   m_EditorClassIdentifier: 
   powerupName: Shield
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  emoji: "\U0001F6E1\uFE0F"
   description: Add a shield around character to prevent damage
-  level: 1
-  rarity: 0
   effect: {fileID: 11400000, guid: f7253670dc34e79479f1a826c653c408, type: 2}
+  rarity: 0

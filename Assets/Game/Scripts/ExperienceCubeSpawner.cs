@@ -3,11 +3,14 @@ using UnityEngine;
 
 public class ExperienceCubeSpawner : MonoBehaviour
 {
+    public static ExperienceCubeSpawner Instance { get; private set; }
+    
     public GameObject experienceCubePrefab;
     public Transform player;
     public float activeRadius = 30f;       // Rayon de la zone active autour du joueur
     public float preloadRadius = 50f;      // Rayon de la zone de préchargement autour du joueur
     public int maxExperienceCubes = 100;   // Nombre maximum de cubes d'expérience simultanés
+    public Color rareCubeColor = Color.cyan; // Couleur des cubes rares
 
     [System.Serializable]
     public struct CubeType
@@ -22,6 +25,17 @@ public class ExperienceCubeSpawner : MonoBehaviour
     private List<GameObject> experienceCubesPool = new List<GameObject>();
     private List<GameObject> activeCubes = new List<GameObject>();
 
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
     private void Start()
     {
         // Initialisation du pool de cubes d'expérience
@@ -205,4 +219,39 @@ public class ExperienceCubeSpawner : MonoBehaviour
             Gizmos.DrawWireSphere(playerPosition2D, preloadRadius);
         }
     }
+    
+    public void SpawnRareExperienceCube(Vector3 position, int experienceValue)
+    {
+        GameObject cube;
+
+        // Si le pool est vide, instancie un nouveau cube
+        if (experienceCubesPool.Count > 0)
+        {
+            cube = experienceCubesPool[0];
+            experienceCubesPool.RemoveAt(0);
+        }
+        else
+        {
+            Debug.LogWarning("Pas de cube disponible dans le pool, création d'un nouveau cube pour le spawn rare.");
+            cube = Instantiate(experienceCubePrefab);
+        }
+
+        // Configure le cube
+        cube.GetComponent<ExperienceCube>().SetExperienceValue(experienceValue);
+
+        // Donne une couleur spéciale pour les cubes rares
+        Renderer renderer = cube.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            renderer.material.color = rareCubeColor; // Couleur pour les cubes rares
+        }
+
+        // Place le cube
+        cube.transform.position = new Vector3(position.x, experienceCubePrefab.transform.position.y, position.z);
+        cube.SetActive(true);
+
+        // Ajoute le cube à la liste des cubes actifs
+        activeCubes.Add(cube);
+    }
+
 }

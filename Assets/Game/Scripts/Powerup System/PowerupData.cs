@@ -4,7 +4,7 @@ using UnityEngine;
 public class PowerupData : ScriptableObject
 {
     public string powerupName;
-    public Sprite icon;
+    public string emoji;
     public string description;
     public PowerupEffect effect; // Effet associé au power-up
     public PowerUpRarity rarity;

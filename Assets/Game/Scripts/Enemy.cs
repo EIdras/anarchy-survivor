@@ -13,17 +13,22 @@ public class Enemy : MonoBehaviour
     private List<Color> originalColor_body;
     public Color damageColor = Color.red;
     public float damageColorDuration = 0.2f;
+    public GameObject experienceCubePrefab;
+    public float dropChance = 0.1f; // 10% de chance de drop par défaut
+    public int expAmount;
 
     GameObject body;
     GameObject head;
     SkinnedMeshRenderer bodyRenderer;
     SkinnedMeshRenderer headRenderer;
 
-    public void Initialize(int health, float speed, float damage, Transform player)
+    public void Initialize(int health, float speed, float damage, float dropChance, int expAmount, Transform player)
     {
         this.health = health;
         this.speed = speed;
         this.player = player;
+        this.dropChance = dropChance;
+        this.expAmount = expAmount;
         this.damageToPlayer = damage;
 
         InitializeColors();
@@ -71,10 +76,7 @@ public class Enemy : MonoBehaviour
         health -= damage;
         if (health <= 0)
         {
-            gameObject.SetActive(false); // Ajoute l'ennemi au pool pour réutilisation
-
-            // Ajoute de l'expérience au joueur
-            PlayerManager.Instance.AddExperience((int)health % 4);
+           HandleDeath();
         }
         else
         {
@@ -83,6 +85,18 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void HandleDeath()
+    {
+        gameObject.SetActive(false); // Ajoute l'ennemi au pool pour réutilisation
+
+        // Calcul de la probabilité d'apparition d'un cube rare
+        float randomChance = UnityEngine.Random.value;
+        if (randomChance <= dropChance)
+        {
+            ExperienceCubeSpawner.Instance.SpawnRareExperienceCube(transform.position, expAmount); // Valeur d'XP du cube rare
+        }
+    }
+    
     private System.Collections.IEnumerator ShowDamageEffect()
     {
         bodyRenderer.material.color = damageColor;

@@ -14,6 +14,7 @@ public class PlayerShield : MonoBehaviour
     private int currentLayers;            // Couches actuelles disponibles, visible dans l'éditeur
 
     private bool isRegenerating = false;
+    private bool isInvincible = false;
     
     private static float transparency = 0.2f;
 
@@ -38,18 +39,30 @@ public class PlayerShield : MonoBehaviour
         shieldInstance.SetActive(true);  // Toujours actif
     }
 
-    private void UpdateShieldVisual()
+private void UpdateShieldVisual()
+{
+    // Si le nombre de couches est 0, désactive le bouclier
+    if (currentLayers == 0)
     {
-        // Change la couleur de la sphère de bouclier en fonction du nombre de couches disponibles
-        int colorIndex = Mathf.Clamp(currentLayers - 1, 0, layerColors.Length - 1);
-        Renderer renderer = shieldInstance.GetComponent<Renderer>();
-        renderer.material.color = layerColors[colorIndex];
+        shieldInstance.SetActive(false);
+        return;
     }
+
+    // Change la couleur de la sphère de bouclier en fonction du nombre de couches disponibles
+    int colorIndex = Mathf.Clamp(currentLayers - 1, 0, layerColors.Length - 1);
+    Renderer renderer = shieldInstance.GetComponent<Renderer>();
+    renderer.material.color = layerColors[colorIndex];
+}
 
     public void TakeHit()
     {
+        if (isInvincible)
+        {
+            return;
+        }
         if (currentLayers > 0)
         {
+            Debug.Log("Shield hit! Layes updated from " + currentLayers + " to " + (currentLayers - 1));
             currentLayers--; // Réduit les couches disponibles
             UpdateShieldVisual();
 
@@ -58,7 +71,16 @@ public class PlayerShield : MonoBehaviour
             {
                 StartCoroutine(RegenerateShield());
             }
+            
+            StartCoroutine(InvicibilityFrames());
         }
+    }
+    
+    private IEnumerator InvicibilityFrames()
+    {
+        isInvincible = true;
+        yield return new WaitForSeconds(1f); // Attendre 1 seconde avant de désactiver l'invincibilité
+        isInvincible = false;
     }
 
     private IEnumerator RegenerateShield()
@@ -73,14 +95,9 @@ public class PlayerShield : MonoBehaviour
         isRegenerating = false;
     }
 
-    /*
-    private void OnTriggerEnter(Collider other)
+    public bool isShieldTanking()
     {
-        if (other.CompareTag("EnemyProjectile"))
-        {
-            Destroy(other.gameObject);
-            TakeHit();
-        }
+        return currentLayers > 0 || isInvincible;
     }
-    */
+    
 }

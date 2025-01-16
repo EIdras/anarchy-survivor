@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BladesPowerup
   m_EditorClassIdentifier: 
   powerupName: Orbiting Blades
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  emoji: "\U0001F5E1"
   description: Three blades orbiting around the player, dealing damage to enemies
     at range
   effect: {fileID: 11400000, guid: f78db592da52fdf49b6dd08e05c956cd, type: 2}

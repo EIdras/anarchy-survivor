@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class PowerupCard : MonoBehaviour
 {
-    public Image iconImage;          // L'icône du power-up
+    public TMP_Text emoji;          // L'icône du power-up
     public TMP_Text nameText;        // Le nom du power-up
     public TMP_Text descriptionText; // La description du power-up
     public TMP_Text levelText;       // Le niveau actuel du power-up
@@ -19,7 +19,7 @@ public class PowerupCard : MonoBehaviour
         this.powerupData = powerupData;  // Assigne le PowerupData transmis à l'instance actuelle
 
         // Remplit les informations visuelles de la carte avec les données du PowerupData
-        iconImage.sprite = powerupData.icon;
+        emoji.text = powerupData.emoji;
         nameText.text = powerupData.powerupName;
         descriptionText.text = powerupData.description;
         levelText.text = "Lvl " + level;

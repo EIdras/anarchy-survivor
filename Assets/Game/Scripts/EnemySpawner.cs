@@ -17,6 +17,8 @@ public class EnemySpawner : MonoBehaviour
         public Color color;
         public float spawnChance;
         public float baseDamage;
+        public float expSpawnChance;
+        public int expAmount;
     }
 
     public List<EnemyType> enemyTypes;
@@ -132,7 +134,7 @@ public class EnemySpawner : MonoBehaviour
             bodyRenderer.materials[2].color = enemyType.color;
             headRenderer.materials[2].color = enemyType.color;
 
-            enemy.GetComponent<Enemy>().Initialize(enemyType.health, enemyType.speed, damage, player);
+            enemy.GetComponent<Enemy>().Initialize(enemyType.health, enemyType.speed, damage, enemyType.expSpawnChance, enemyType.expAmount,  player);
 
             enemy.transform.position = new Vector3(position2D.x, 0, position2D.y);
             enemy.SetActive(true);
@@ -169,7 +171,9 @@ public class EnemySpawner : MonoBehaviour
                 speed = enemyType.speed,
                 color = enemyType.color,
                 spawnChance = adjustedChance,
-                baseDamage = enemyType.baseDamage
+                baseDamage = enemyType.baseDamage,
+                expSpawnChance = enemyType.expSpawnChance,
+                expAmount = enemyType.expAmount
             });
             totalChance += adjustedChance;
         }

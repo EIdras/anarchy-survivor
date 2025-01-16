@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FireRatePowerup
   m_EditorClassIdentifier: 
   powerupName: Fire rate
-  icon: {fileID: 0}
+  emoji: "\u26A1"
   description: Increases fire rate
   effect: {fileID: 11400000, guid: 0384a58efab504148b4deb6c3b28b2cf, type: 2}
   rarity: 1
