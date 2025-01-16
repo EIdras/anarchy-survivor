@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,6 +31,20 @@ public class PlayerManager : MonoBehaviour
         else
         {
             Instance = this;
+        }
+    }
+
+    private void Start()
+    {
+        StartCoroutine(RegenerateHealth());
+    }
+    
+    private IEnumerator RegenerateHealth()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1.0f);
+            Heal(passiveRegen);
         }
     }
 
