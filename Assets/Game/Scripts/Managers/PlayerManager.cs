@@ -16,11 +16,14 @@ public class PlayerManager : MonoBehaviour
     public Weapon weapon;
     public float passiveRegen = 0.0f; // régénération passive
     public PlayerShield shield;
+    
+    private SoundManager soundManager;
 
     public event Action<float> OnHealthChanged;
     public event Action OnPlayerDeath;
     public event Action<int, int> OnExperienceChanged;
     public event Action<int> OnLevelUp;
+    public event Action OnTogglePause; 
 
     private void Awake()
     {
@@ -31,6 +34,10 @@ public class PlayerManager : MonoBehaviour
         else
         {
             Instance = this;
+            soundManager = SoundManager.Instance;
+            if (soundManager == null) {
+                Debug.LogWarning("SoundManager is not initialized.");
+            }
         }
     }
 
@@ -55,6 +62,7 @@ public class PlayerManager : MonoBehaviour
             shield.TakeHit();
             return;
         }
+        soundManager.PlayPlayerHitSound();
         health -= damage;
         health = Mathf.Clamp(health, 0, 100);
         OnHealthChanged?.Invoke(health);
@@ -93,8 +101,14 @@ public class PlayerManager : MonoBehaviour
     private void Die()
     {
         // Gestion de la mort du joueur
+        soundManager.PlayPlayerDeathSound();
         OnPlayerDeath?.Invoke();
         Debug.Log("Player has died");
+    }
+    
+    public void TogglePause()
+    {
+        OnTogglePause?.Invoke();
     }
 
     private void OnDrawGizmos()

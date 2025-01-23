@@ -17,11 +17,20 @@ public class Enemy : MonoBehaviour
     private float dropChance = 0.1f; // 10% de chance de drop par défaut
     private int expAmount;
     public ParticleSystem hitParticlesPrefab;
-
+    public Animator animator;
+    private SoundManager soundManager;
+    
     GameObject body;
     GameObject head;
     SkinnedMeshRenderer bodyRenderer;
     SkinnedMeshRenderer headRenderer;
+    private void Awake()
+    {
+        soundManager = SoundManager.Instance;
+        if (soundManager == null) {
+            Debug.LogWarning("SoundManager is not initialized.");
+        }
+    }
 
     public void Initialize(int health, float speed, float damage, float dropChance, int expAmount, Transform player)
     {
@@ -55,6 +64,21 @@ public class Enemy : MonoBehaviour
             originalColor_head.Add(mat.color);
         }
     }
+    
+    private void Update()
+    {
+        MoveTowardsPlayer();
+        UpdateAnimator();
+    }
+
+    private void UpdateAnimator()
+    {
+        if (animator != null)
+        {
+            // TODO
+            animator.SetFloat("Speed", 1);
+        }
+    }
 
     public void MoveTowardsPlayer()
     {
@@ -81,6 +105,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
+            soundManager.PlayEnemyHitSound();
             StartCoroutine(ShowDamageEffect());
         }
     }
@@ -116,6 +141,7 @@ public class Enemy : MonoBehaviour
 
     private void HandleDeath()
     {
+        soundManager.PlayEnemyDeathSound();
         PlayDeathParticles();
         gameObject.SetActive(false); // Ajoute l'ennemi au pool pour réutilisation
 

@@ -36,17 +36,21 @@ public class PlayerController : MonoBehaviour
     {
         return playerInput;
     }
-
-    // appelé par PlayerInput
+    
     public void OnMove(InputValue move)
     {
         moveInputDirection = move.Get<Vector2>();
     }
-
-    // appelé par PlayerInput
+    
     public void OnLook(InputValue look)
     {
         lookInputDirection = look.Get<Vector2>();
+    }
+
+    public void OnPause()
+    {
+        Debug.Log("Pause");
+        PlayerManager.Instance.TogglePause();
     }
 
     void Update()
@@ -62,6 +66,11 @@ public class PlayerController : MonoBehaviour
         
         animator.SetFloat("Speed", velocity.magnitude);
         character.Move(velocity * Time.deltaTime);
+        
+        // Bloquage de la position Y
+        Vector3 position = transform.position;
+        position.y = 0;
+        transform.position = position;
     }
     
     void LookAt()

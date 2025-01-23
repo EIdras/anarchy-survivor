@@ -71,7 +71,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player
+  m_Name: Enemy
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Speed
@@ -102,7 +102,7 @@ AnimatorController:
   - serializedVersion: 5
     m_Name: TopBody
     m_StateMachine: {fileID: 2722933195549057461}
-    m_Mask: {fileID: 31900000, guid: b245719124ed0cd4faf59df4fae9f179, type: 2}
+    m_Mask: {fileID: 0}
     m_Motions: []
     m_Behaviours: []
     m_BlendingMode: 0

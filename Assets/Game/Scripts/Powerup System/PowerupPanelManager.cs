@@ -10,9 +10,11 @@ public class PowerupPanelManager : MonoBehaviour
     public GameObject powerupCardPrefab;
     public Transform cardContainer;
     public List<PowerupData> availablePowerups;
+    public AudioSettingsManager audioSettingsManager;
 
     private List<GameObject> activeCards = new List<GameObject>();
     private PlayerInput playerInput;
+    private TimeManager timeManager;
 
     private void Awake()
     {
@@ -30,14 +32,12 @@ public class PowerupPanelManager : MonoBehaviour
     {
         gameObject.SetActive(false);
         playerInput = PlayerController.Instance.GetPlayerInput();
+        timeManager = TimeManager.Instance;
     }
 
     public void ShowPowerupOptions()
     {
-        Time.timeScale = 0;
         gameObject.SetActive(true);
-
-        PlayerController.Instance.EnableControl(false);
 
         // Nettoyage des cartes existantes
         foreach (Transform child in cardContainer)
@@ -51,6 +51,12 @@ public class PowerupPanelManager : MonoBehaviour
         foreach (var powerupData in selectedPowerups)
         {
             GameObject card = Instantiate(powerupCardPrefab, cardContainer);
+            // récupère la composante Event Trigger pour ajouter un événement de sélection
+            EventTrigger trigger = card.GetComponent<EventTrigger>();
+            EventTrigger.Entry entry = new EventTrigger.Entry();
+            entry.eventID = EventTriggerType.Select;
+            entry.callback.AddListener((data) => { audioSettingsManager.PlayUISelectSound(); });
+            trigger.triggers.Add(entry);
             var cardComponent = card.GetComponent<PowerupCard>();
             int level = PowerupManager.Instance.GetPowerUpLevel(powerupData);
             cardComponent.Setup(powerupData, level + 1); // Proposer un niveau supérieur à ce que le joueur possède
@@ -70,8 +76,7 @@ public class PowerupPanelManager : MonoBehaviour
     public void HidePanel()
     {
         gameObject.SetActive(false);
-        Time.timeScale = 1;
-        PlayerController.Instance.EnableControl(true);
+        timeManager.ResumeTime();
 
         // Désactive l'écoute de l'action "Submit"
         playerInput.actions["Submit"].performed -= OnSelect;

@@ -45,7 +45,6 @@ public class EnemySpawner : MonoBehaviour
     private void Update()
     {
         ManageSpawn();
-        UpdateEnemyBehavior();
 
         spawnTimer -= Time.deltaTime;
         if (spawnTimer <= 0f)
@@ -191,18 +190,6 @@ public class EnemySpawner : MonoBehaviour
         }
 
         return weightedTypes[0];
-    }
-
-    // Met à jour le comportement des ennemis actifs
-    private void UpdateEnemyBehavior()
-    {
-        foreach (GameObject enemy in activeEnemies)
-        {
-            if (enemy != null)
-            {
-                enemy.GetComponent<Enemy>().MoveTowardsPlayer();
-            }
-        }
     }
 
     private void OnDrawGizmos()

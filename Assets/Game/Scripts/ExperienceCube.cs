@@ -91,6 +91,6 @@ public class ExperienceCube : MonoBehaviour
     private void Collect()
     {
         PlayerManager.Instance.AddExperience(experienceValue);
-        gameObject.SetActive(false); // TODO : Détruire le cube (plante Unity)
+        gameObject.SetActive(false);
     }
 }

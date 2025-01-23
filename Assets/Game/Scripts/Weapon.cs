@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -10,6 +11,16 @@ public class Weapon : MonoBehaviour
     public Transform firePoint;       // Point de départ des projectiles
 
     private bool isFiring = false;    // Indique si l'arme doit tirer en continu
+    public SoundManager soundManager;
+
+
+    private void Awake()
+    {
+        soundManager = SoundManager.Instance;
+        if (soundManager == null) {
+            Debug.LogWarning("SoundManager is not initialized.");
+        }
+    }
 
     private void Start()
     {
@@ -57,6 +68,7 @@ public class Weapon : MonoBehaviour
     {
         if (projectilePrefab != null && firePoint != null)
         {
+            soundManager.PlayShootSound();
             // Instancier le projectile
             GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
             Projectile projScript = projectile.GetComponent<Projectile>();
