@@ -8,6 +8,8 @@ public class Enemy : MonoBehaviour
     private float health;
     private float speed;
     private float damageToPlayer = 10f;
+    private float attackSpeed = 1f;
+    private float lastAttackTime = 0f;
 
     private List<Color> originalColor_head;
     private List<Color> originalColor_body;
@@ -186,18 +188,32 @@ public class Enemy : MonoBehaviour
     {
         if (other.CompareTag("Player")) // Assurez-vous que le joueur a le tag "Player"
         {
-            PlayerManager.Instance.TakeDamage(damageToPlayer);
-            Debug.Log($"Enemy hit the player, dealt {damageToPlayer} damage.");
+            if (Time.time >= lastAttackTime + attackSpeed)
+            {
+                PlayerManager.Instance.TakeDamage(damageToPlayer);
+                lastAttackTime = Time.time;
+                Debug.Log($"Enemy hit the player, dealt {damageToPlayer} damage.");
+            }
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        // Si l'ennemi reste en collision avec le joueur, il continue à lui infliger des dégâts
         if (other.CompareTag("Player"))
         {
-            PlayerManager.Instance.TakeDamage(damageToPlayer * Time.deltaTime);
+            if (Time.time >= lastAttackTime + attackSpeed)
+            {
+                StartCoroutine(AttackPlayer());
+            }
         }
+    }
+
+    private System.Collections.IEnumerator AttackPlayer()
+    {
+        PlayerManager.Instance.TakeDamage(damageToPlayer);
+        lastAttackTime = Time.time;
+        Debug.Log($"Enemy hit the player, dealt {damageToPlayer} damage.");
+        yield return new WaitForSeconds(attackSpeed);
     }
 
 
