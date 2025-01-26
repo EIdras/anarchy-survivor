@@ -77,12 +77,15 @@ public class PlayerManager : MonoBehaviour
         if (health <= 0)
         {
             isDead = true;
+            StopCoroutine(RegenerateHealth());
             StartCoroutine(HandleDeath());
         }
     }
 
     public void Heal(float amount)
     {
+        if (isDead)
+            return;
         health += amount;
         health = Mathf.Clamp(health, 0, 100);
         OnHealthChanged?.Invoke(health);
@@ -90,6 +93,8 @@ public class PlayerManager : MonoBehaviour
 
     public void AddExperience(int amount)
     {
+        if (isDead)
+            return;
         experience += amount;
         int experienceRequiredToLevelUp = level * 10;
         OnExperienceChanged?.Invoke(experience, experienceRequiredToLevelUp);
@@ -102,6 +107,8 @@ public class PlayerManager : MonoBehaviour
 
     private void LevelUp()
     {
+        if (isDead)
+            return;
         level++;
         experience = 0; // Réinitialise l'expérience après le niveau
         OnLevelUp?.Invoke(level);

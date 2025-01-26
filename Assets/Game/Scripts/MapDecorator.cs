@@ -3,11 +3,13 @@ using System.Collections.Generic;
 
 public class MapDecorator : MonoBehaviour
 {
-    public GameObject[] prefabs; // Liste des préfabs à placer
+    public GameObject[] prefabs; // Liste des prefabs Ã  placer
     public GameObject plane; // Surface de la map
-    public int density = 50;
+    public int density = 50; // Nombre d'objets Ã  placer
     public bool randomRotation = true;
-    public float minimumDistance = 1.0f;
+    public float minimumDistance = 1.0f; // Distance minimale entre les objets
+    public Transform playerSpawnPoint; // Point de spawn du joueur
+    public float safeZoneRadius = 5.0f; // Rayon de la zone de sÃ©curitÃ© autour du spawn
 
     private List<Vector3> placedPositions = new List<Vector3>();
 
@@ -20,7 +22,12 @@ public class MapDecorator : MonoBehaviour
         }
         if (prefabs == null || prefabs.Length == 0)
         {
-            Debug.LogWarning("Aucun préfab");
+            Debug.LogWarning("Aucun prefab");
+            return;
+        }
+        if (playerSpawnPoint == null)
+        {
+            Debug.LogError("Ajouter le point de spawn du joueur au script!");
             return;
         }
 
@@ -29,7 +36,7 @@ public class MapDecorator : MonoBehaviour
 
     void DecoratePlane()
     {
-        // Récupérer la taille du plane pour placer dans l'ensemble de la surface
+        // RÃ©cupÃ©rer la taille du plane pour placer dans l'ensemble de la surface
         MeshRenderer planeRenderer = plane.GetComponent<MeshRenderer>();
         if (planeRenderer == null)
         {
@@ -45,7 +52,7 @@ public class MapDecorator : MonoBehaviour
         {
             bool placed = false;
 
-            while (!placed && attempts < density * 10) // Permet d'éviter des boucle infinie
+            while (!placed && attempts < density * 10) // Permet d'Ã©viter une boucle infinie
             {
                 float randomX = Random.Range(-planeSize.x / 2, planeSize.x / 2);
                 float randomZ = Random.Range(-planeSize.z / 2, planeSize.z / 2);
@@ -57,12 +64,12 @@ public class MapDecorator : MonoBehaviour
 
                     GameObject prefab = prefabs[Random.Range(0, prefabs.Length)];
 
-                    // Rotation aléatoire + rotation de -90 degrés pour que les objets soient alignés avec le sol
+                    // Rotation alÃ©atoire + rotation de -90 degrÃ©s pour que les objets soient alignÃ©s avec le sol
                     Quaternion rotation = Quaternion.Euler(-90, randomRotation ? Random.Range(0, 360) : 0, 0);
 
                     GameObject instance = Instantiate(prefab, position, rotation, transform);
 
-                    // Ajouter un MeshCollider car le préfab n'en a pas
+                    // Ajouter un MeshCollider si le prefab n'en a pas
                     AddMeshCollider(instance);
 
                     placed = true;
@@ -72,18 +79,24 @@ public class MapDecorator : MonoBehaviour
         }
     }
 
-    // Calculer la distance entre la position proposée et les positions déjà utilisées
+    // VÃ©rifie si la position proposÃ©e est valide
     bool IsPositionValid(Vector3 position)
     {
+        // VÃ©rifie si la position est trop proche du spawn du joueur
+        if (playerSpawnPoint != null && Vector3.Distance(position, playerSpawnPoint.position) < safeZoneRadius)
+        {
+            return false;
+        }
+
+        // VÃ©rifie la distance par rapport aux objets dÃ©jÃ  placÃ©s
         foreach (Vector3 placedPosition in placedPositions)
         {
-            
             if (Vector3.Distance(position, placedPosition) < minimumDistance)
             {
-                return false; 
+                return false;
             }
         }
-        return true; 
+        return true;
     }
 
     void AddMeshCollider(GameObject instance)
@@ -100,7 +113,7 @@ public class MapDecorator : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning($"Impossible d'ajouter un MeshCollider à {instance.name} car il n'a pas de MeshFilter ou de Mesh.");
+                Debug.LogWarning($"Impossible d'ajouter un MeshCollider Ã  {instance.name} car il n'a pas de MeshFilter ou de Mesh.");
             }
         }
     }

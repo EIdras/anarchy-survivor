@@ -97,9 +97,4 @@ public class GameManager : MonoBehaviour
             pauseMenu.GetComponentInChildren<MenusManager>().ChangeMenu(0);
         }
     }
-    
-    public SoundManager GetSoundManager()
-    {
-        return soundManager;
-    }
 }
