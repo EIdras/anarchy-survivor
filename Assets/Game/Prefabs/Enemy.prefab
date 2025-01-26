@@ -369,9 +369,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageColor: {r: 1, g: 0, b: 0, a: 1}
   damageColorDuration: 0.2
-  experienceCubePrefab: {fileID: 7038282601644793000, guid: eeb0fbf991485a046ad82b6259d843bc, type: 3}
-  hitParticlesPrefab: {fileID: 5966430895409916948, guid: 4e15937a02ddaa346b8df7ccf4affb59, type: 3}
-  animator: {fileID: 0}
+  animator: {fileID: 6651068405614040843}
 --- !u!65 &7422939323100699828
 BoxCollider:
   m_ObjectHideFlags: 0

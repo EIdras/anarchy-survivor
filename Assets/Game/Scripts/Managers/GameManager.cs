@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
         soundManager.PlayGameMusic();
         
         PlayerManager playerInstance = PlayerManager.Instance;
+        playerInstance.OnPlayerDeathAnim += DisableControls;
         playerInstance.OnPlayerDeath += GameLost;
         playerInstance.OnLevelUp += LevelUp;
         playerInstance.OnTogglePause += TogglePause;
@@ -56,6 +57,11 @@ public class GameManager : MonoBehaviour
         
         gameOverCanvas.SetActive(true);
         UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(gameOverCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+    }
+    
+    private void DisableControls()
+    {
+        timeManager.EnableControl(false);
     }
     
     private void LevelUp(int level)

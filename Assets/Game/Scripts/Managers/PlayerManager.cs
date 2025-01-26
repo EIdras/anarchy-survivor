@@ -17,9 +17,13 @@ public class PlayerManager : MonoBehaviour
     public float passiveRegen = 0.0f; // régénération passive
     public PlayerShield shield;
     
+    private bool isDead = false;
+    
+    [SerializeField] private Animator animator;
     private SoundManager soundManager;
 
     public event Action<float> OnHealthChanged;
+    public event Action OnPlayerDeathAnim;
     public event Action OnPlayerDeath;
     public event Action<int, int> OnExperienceChanged;
     public event Action<int> OnLevelUp;
@@ -57,6 +61,8 @@ public class PlayerManager : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (isDead)
+            return;
         if (shield.isShieldTanking())
         {
             soundManager.PlayPlayerShieldBrokenSound();
@@ -70,7 +76,8 @@ public class PlayerManager : MonoBehaviour
         OnHealthChanged?.Invoke(health);
         if (health <= 0)
         {
-            Die();
+            isDead = true;
+            StartCoroutine(HandleDeath());
         }
     }
 
@@ -100,12 +107,21 @@ public class PlayerManager : MonoBehaviour
         OnLevelUp?.Invoke(level);
     }
 
-    private void Die()
+    private IEnumerator HandleDeath()
     {
         // Gestion de la mort du joueur
+        OnPlayerDeathAnim?.Invoke();
         soundManager.PlayPlayerDeathSound();
+        yield return StartCoroutine(PlayDeathAnimation());
         OnPlayerDeath?.Invoke();
         Debug.Log("Player has died");
+    }
+
+    private IEnumerator PlayDeathAnimation()
+    {
+        animator.SetLayerWeight(1, 0f);
+        animator.SetTrigger("Die");
+        yield return new WaitForSeconds(1.6f);
     }
     
     public void TogglePause()

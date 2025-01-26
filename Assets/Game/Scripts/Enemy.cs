@@ -75,8 +75,7 @@ public class Enemy : MonoBehaviour
     {
         if (animator != null)
         {
-            // TODO
-            animator.SetFloat("Speed", 1);
+            animator.SetFloat("Speed", speed);
         }
     }
 

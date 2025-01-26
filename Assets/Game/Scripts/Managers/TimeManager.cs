@@ -39,13 +39,18 @@ public class TimeManager : MonoBehaviour
     public void StopTime()
     {
         Time.timeScale = 0;
-        playerController.EnableControl(false);
+        EnableControl(false);
     }
     
     public void ResumeTime()
     {
         Time.timeScale = 1;
-        playerController.EnableControl(true);
+        EnableControl(true);
+    }
+    
+    public void EnableControl(bool enable)
+    {
+        playerController.EnableControl(enable);
     }
     
     private void DisplayCurrentTime()
