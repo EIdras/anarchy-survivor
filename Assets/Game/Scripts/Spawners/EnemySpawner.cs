@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -7,7 +9,8 @@ public class EnemySpawner : MonoBehaviour
     public Transform player;
     public float spawnRadius = 50f;      // Rayon de spawn des ennemis
     public float despawnRadius = 60f;    // Rayon de despawn des ennemis 
-    public int maxEnemies = 50;
+    public int baseMaxEnemies = 10;      // Limite de base des ennemis
+    public float baseSpawnInterval = 2f; // Intervalle de spawn de base
 
     [System.Serializable]
     public struct EnemyType
@@ -22,17 +25,23 @@ public class EnemySpawner : MonoBehaviour
     }
 
     public List<EnemyType> enemyTypes;
-    public int playerLevel = 1;  // Niveau du joueur
-    public float baseSpawnInterval = 2f;
     private float spawnTimer;
-
     private List<GameObject> enemyPool = new List<GameObject>();
     private List<GameObject> activeEnemies = new List<GameObject>();
 
+    private int currentMaxEnemies;
+    private float currentSpawnInterval;
+    private float timeSurvived;
+    
+    private TimeManager timeManager;
     private void Start()
     {
+        timeManager = TimeManager.Instance;
+        currentMaxEnemies = baseMaxEnemies;
+        currentSpawnInterval = baseSpawnInterval;
+
         // Initialisation du pool d'ennemis
-        for (int i = 0; i < maxEnemies; i++)
+        for (int i = 0; i < baseMaxEnemies * 10; i++) // Crée un pool plus grand pour anticiper l'augmentation de la limite
         {
             GameObject enemy = Instantiate(enemyPrefab);
             enemy.SetActive(false);
@@ -54,10 +63,38 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        timeSurvived = timeManager.GetGameTime();
+        UpdateDifficulty();
+    }
+
+    private void UpdateDifficulty()
+    {
+        // Augmente le nombre maximum d'ennemis progressivement
+        int newMaxEnemies = baseMaxEnemies + Mathf.FloorToInt(timeSurvived * 0.5f);
+        if (newMaxEnemies != currentMaxEnemies)
+        {
+            currentMaxEnemies = newMaxEnemies;
+        }
+
+        // Diminue l'intervalle de spawn progressivement
+        float newSpawnInterval = Mathf.Max(baseSpawnInterval - (timeSurvived * 0.02f), 0.1f);
+        if (Mathf.Abs(newSpawnInterval - currentSpawnInterval) > 0.01f)
+        {
+            currentSpawnInterval = newSpawnInterval;
+        }
+    }
+
     // Récupère la fréquence de spawn des ennemis en fonction du niveau du joueur
     private float GetSpawnInterval()
     {
-        return Mathf.Max(baseSpawnInterval / (1 + playerLevel * 0.1f), 0.2f);
+        return currentSpawnInterval;
+    }
+
+    private int GetMaxEnemies()
+    {
+        return currentMaxEnemies;
     }
 
     // Gère le spawn et le despawn des ennemis
@@ -77,7 +114,7 @@ public class EnemySpawner : MonoBehaviour
     // Spawne un ennemi à une position aléatoire
     private void SpawnEnemy()
     {
-        if (activeEnemies.Count >= maxEnemies)
+        if (activeEnemies.Count >= GetMaxEnemies())
         {
             return;
         }
@@ -93,7 +130,8 @@ public class EnemySpawner : MonoBehaviour
     private Vector2 GetRandomSpawnPosition()
     {
         Vector2 randomOffset = Random.insideUnitCircle.normalized * spawnRadius;
-        Vector2 playerPosition2D = new Vector2(player.position.x, player.position.z);
+        Vector3 playerPosition = player.position;
+        Vector2 playerPosition2D = new Vector2(playerPosition.x, playerPosition.z);
         return playerPosition2D + randomOffset;
     }
 
@@ -103,7 +141,8 @@ public class EnemySpawner : MonoBehaviour
         foreach (GameObject enemy in activeEnemies)
         {
             if (enemy == null) continue;
-            Vector2 enemyPosition2D = new Vector2(enemy.transform.position.x, enemy.transform.position.z);
+            Vector3 enemyPosition = enemy.transform.position;
+            Vector2 enemyPosition2D = new Vector2(enemyPosition.x, enemyPosition.z);
             if (Vector2.Distance(position, enemyPosition2D) < 2.0f)
             {
                 return false;
@@ -120,10 +159,7 @@ public class EnemySpawner : MonoBehaviour
             GameObject enemy = enemyPool[0];
             enemyPool.RemoveAt(0);
 
-            EnemyType enemyType = GetRandomEnemyTypeBasedOnLevel();
-
-            // Détermine les dégâts de l'ennemi en fonction de son niveau
-            float damage = enemyType.baseDamage * (1 + playerLevel * 0.2f);
+            EnemyType enemyType = GetRandomEnemyTypeBasedOnTime();
 
             // Configure l'ennemi
             GameObject body = enemy.transform.GetChild(0).gameObject;
@@ -133,7 +169,14 @@ public class EnemySpawner : MonoBehaviour
             bodyRenderer.materials[2].color = enemyType.color;
             headRenderer.materials[2].color = enemyType.color;
 
-            enemy.GetComponent<Enemy>().Initialize(enemyType.health, enemyType.speed, damage, enemyType.expSpawnChance, enemyType.expAmount,  player);
+            enemy.GetComponent<Enemy>().Initialize(
+                enemyType.health + Mathf.FloorToInt(Time.timeSinceLevelLoad * 0.5f), // Augmente la vie au fil du temps
+                enemyType.speed,
+                enemyType.baseDamage,
+                enemyType.expSpawnChance,
+                enemyType.expAmount,
+                player
+            );
 
             enemy.transform.position = new Vector3(position2D.x, 0, position2D.y);
             enemy.SetActive(true);
@@ -141,7 +184,11 @@ public class EnemySpawner : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Pas d'ennemi disponible dans le pool. Impossible d'activer un nouvel ennemi.");
+            // Si aucun ennemi n'est disponible dans le pool, en créer un nouveau
+            Debug.LogWarning("Pas d'ennemi disponible dans le pool. Création d'un nouvel ennemi.");
+            GameObject enemy = Instantiate(enemyPrefab);
+            enemy.SetActive(false);
+            enemyPool.Add(enemy);
         }
     }
 
@@ -155,15 +202,14 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    // Récupère un type d'ennemi aléatoire en fonction du niveau du joueur
-    private EnemyType GetRandomEnemyTypeBasedOnLevel()
+    private EnemyType GetRandomEnemyTypeBasedOnTime()
     {
         float totalChance = 0f;
         List<EnemyType> weightedTypes = new List<EnemyType>();
 
         foreach (var enemyType in enemyTypes)
         {
-            float adjustedChance = enemyType.spawnChance * (1 + playerLevel * 0.05f);
+            float adjustedChance = enemyType.spawnChance * (1 + timeSurvived * 0.01f); // Augmente les chances des types d'ennemis plus puissants
             weightedTypes.Add(new EnemyType
             {
                 health = enemyType.health,

@@ -15,6 +15,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip playerHitClip;
     [SerializeField] private AudioClip enemyDeathClip;
     [SerializeField] private AudioClip playerDeathClip;
+    [SerializeField] private AudioClip shieldBrokenClip;
     [SerializeField] private AudioClip gameMusic;
     [SerializeField] private AudioClip menuMusic;
 
@@ -96,6 +97,11 @@ public class SoundManager : MonoBehaviour
     public void PlayPlayerHitSound()
     {
         PlayPlayerSound(playerHitClip);
+    }
+    
+    public void PlayPlayerShieldBrokenSound()
+    {
+        PlayPlayerSound(shieldBrokenClip);
     }
 
     public void PlayEnemyDeathSound()

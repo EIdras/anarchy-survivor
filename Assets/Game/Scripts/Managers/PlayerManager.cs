@@ -59,6 +59,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (shield.isShieldTanking())
         {
+            soundManager.PlayPlayerShieldBrokenSound();
             shield.TakeHit();
             return;
         }

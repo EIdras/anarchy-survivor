@@ -6715,6 +6715,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b65e15fa3bfaad94aa576ae9139affd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeText: {fileID: 1068317135}
 --- !u!4 &1410304149
 Transform:
   m_ObjectHideFlags: 0
@@ -7872,7 +7873,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b70b8abfce0c7f74f82636717642aa65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeText: {fileID: 1068317135}
   gameOverCanvas: {fileID: 1130804545}
   pauseMenu: {fileID: 614463979}
   playerEffectsSource: {fileID: 3387471603348769772}
@@ -7937,7 +7937,8 @@ MonoBehaviour:
   player: {fileID: 3387471603348769763}
   spawnRadius: 40
   despawnRadius: 60
-  maxEnemies: 500
+  baseMaxEnemies: 10
+  baseSpawnInterval: 2
   enemyTypes:
   - health: 10
     speed: 2
@@ -7960,8 +7961,6 @@ MonoBehaviour:
     baseDamage: 8
     expSpawnChance: 0.05
     expAmount: 50
-  playerLevel: 1
-  baseSpawnInterval: 2
 --- !u!4 &1623848544 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 09fb30255db1db34a8683a088b07e4be, type: 3}
