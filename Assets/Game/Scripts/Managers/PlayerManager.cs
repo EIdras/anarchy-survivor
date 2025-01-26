@@ -64,6 +64,7 @@ public class PlayerManager : MonoBehaviour
             return;
         }
         soundManager.PlayPlayerHitSound();
+        ParticleUtils.PlayBloodParticles(transform.position, 2, 8);
         health -= damage;
         health = Mathf.Clamp(health, 0, 100);
         OnHealthChanged?.Invoke(health);

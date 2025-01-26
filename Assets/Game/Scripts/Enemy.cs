@@ -15,10 +15,8 @@ public class Enemy : MonoBehaviour
     private List<Color> originalColor_body;
     public Color damageColor = Color.red;
     public float damageColorDuration = 0.2f;
-    public GameObject experienceCubePrefab;
     private float dropChance = 0.1f; // 10% de chance de drop par défaut
     private int expAmount;
-    public ParticleSystem hitParticlesPrefab;
     public Animator animator;
     private SoundManager soundManager;
     
@@ -114,31 +112,12 @@ public class Enemy : MonoBehaviour
 
     private void PlayHitParticles()
     {
-        PlayBloodParticles(5, 10);
+        ParticleUtils.PlayBloodParticles(transform.position, 2, 8);
     }
     
     private void PlayDeathParticles()
     {
-        PlayBloodParticles(30, 40);
-    }
-    
-    private void PlayBloodParticles(int min, int max)
-    {
-        if (hitParticlesPrefab != null)
-        {
-            // Instancie les particules à la position de l'ennemi
-            ParticleSystem bloodParticles = Instantiate(hitParticlesPrefab, transform.position, Quaternion.identity);
-            var emission = bloodParticles.emission;
-            var burst = emission.GetBurst(0);
-            burst.count = new ParticleSystem.MinMaxCurve(min, max); // Plus de particules pour la mort
-            emission.SetBurst(0, burst);
-            
-            bloodParticles.Play();
-            
-           
-            // Détruire automatiquement les particules une fois l'animation terminée
-            Destroy(bloodParticles.gameObject, bloodParticles.main.duration + bloodParticles.main.startLifetime.constant);
-        }
+       ParticleUtils.PlayBloodParticles(transform.position, 20, 40);
     }
 
     private void HandleDeath()
