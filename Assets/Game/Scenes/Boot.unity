@@ -198,8 +198,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UISelectClip: {fileID: 8300000, guid: 05252ccb5cedefa49919831324a192a4, type: 3}
   shootClip: {fileID: 8300000, guid: a6b07d36efa75f64b920b7bfacab3357, type: 3}
-  enemyHitClip: {fileID: 8300000, guid: 05252ccb5cedefa49919831324a192a4, type: 3}
-  playerHitClip: {fileID: 8300000, guid: 05252ccb5cedefa49919831324a192a4, type: 3}
+  enemyHitClip: {fileID: 8300000, guid: e37d5d1519a27e540a62362cc88e1752, type: 3}
+  playerHitClip: {fileID: 8300000, guid: e37d5d1519a27e540a62362cc88e1752, type: 3}
   enemyDeathClip: {fileID: 8300000, guid: b9ffeef3112dc924489680c2ee577bdc, type: 3}
   playerDeathClip: {fileID: 8300000, guid: b9ffeef3112dc924489680c2ee577bdc, type: 3}
   gameMusic: {fileID: 8300000, guid: 8b1022042a059944f9f8247298c3e89d, type: 3}
