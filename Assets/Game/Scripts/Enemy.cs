@@ -4,57 +4,88 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    private Transform player;
-    private float health;
-    private float speed;
-    private float damageToPlayer = 10f;
-    private float attackSpeed = 1f;
-    private float lastAttackTime = 0f;
+    // --- Enumération des états de l’ennemi ---
+    private enum EnemyState
+    {
+        Idle,
+        Chase,
+        Attack,
+        Dead
+    }
 
+    // --- Propriétés de l’ennemi ---
+    [Header("Paramètres de base")]
+    [SerializeField] private float health;
+    [SerializeField] private float speed;
+    [SerializeField] private float damageToPlayer = 10f;
+    [SerializeField] private float attackSpeed = 1f;
+    [SerializeField] private float damageColorDuration = 0.2f;
+    [SerializeField] private float dropChance = 0.1f;
+    [SerializeField] private int expAmount;
+    
+    [Header("Distances")]
+    [SerializeField] private float detectionRange = 10f;  // Distance à partir de laquelle on commence à "Chase"
+    [SerializeField] private float attackRange = 1.5f;    // Distance à partir de laquelle on passe en "Attack"
+
+    [Header("Couleurs / Visuels")]
+    public Color damageColor = Color.red;
     private List<Color> originalColor_head;
     private List<Color> originalColor_body;
-    public Color damageColor = Color.red;
-    public float damageColorDuration = 0.2f;
-    private float dropChance = 0.1f; // 10% de chance de drop par défaut
-    private int expAmount;
+
+    [Header("Références externes")]
     public Animator animator;
     private SoundManager soundManager;
-    
-    GameObject body;
-    GameObject head;
-    SkinnedMeshRenderer bodyRenderer;
-    SkinnedMeshRenderer headRenderer;
+    private Transform player;
+
+    // --- Internes ---
+    private float lastAttackTime = 0f;
+    private EnemyState currentState = EnemyState.Idle;
+
+    // Rendu
+    private SkinnedMeshRenderer bodyRenderer;
+    private SkinnedMeshRenderer headRenderer;
+    private GameObject body;
+    private GameObject head;
+
     private void Awake()
     {
         soundManager = SoundManager.Instance;
-        if (soundManager == null) {
-            Debug.LogWarning("SoundManager is not initialized.");
+        if (soundManager == null)
+        {
+            Debug.LogWarning("SoundManager est introuvable ou non initialisé.");
         }
     }
 
+    // Méthode d'initialisation appelée depuis l'extérieur
     public void Initialize(int health, float speed, float damage, float dropChance, int expAmount, Transform player)
     {
         this.health = health;
         this.speed = speed;
-        this.player = player;
+        this.damageToPlayer = damage;
         this.dropChance = dropChance;
         this.expAmount = expAmount;
-        this.damageToPlayer = damage;
+        this.player = player;
 
         InitializeColors();
     }
 
+    private void Start()
+    {
+        // Si vous le souhaitez, vous pouvez forcer l’état à Idle ou un autre état ici.
+        currentState = EnemyState.Chase;
+    }
+
     private void InitializeColors()
     {
-        body = gameObject.transform.GetChild(0).gameObject;
-        head = gameObject.transform.GetChild(1).gameObject;
+        body = transform.GetChild(0).gameObject;
+        head = transform.GetChild(1).gameObject;
         bodyRenderer = body.GetComponent<SkinnedMeshRenderer>();
         headRenderer = head.GetComponent<SkinnedMeshRenderer>();
 
         originalColor_body = new List<Color>();
         originalColor_head = new List<Color>();
 
-        // Ajout de couleurs à la liste
+        // Enregistrement des couleurs d'origine
         foreach (Material mat in bodyRenderer.materials)
         {
             originalColor_body.Add(mat.color);
@@ -64,43 +95,126 @@ public class Enemy : MonoBehaviour
             originalColor_head.Add(mat.color);
         }
     }
-    
+
     private void Update()
     {
-        MoveTowardsPlayer();
+        // On met à jour la FSM à chaque frame
+        UpdateFSM();
         UpdateAnimator();
+    }
+
+    private void UpdateFSM()
+    {
+        // En fonction de l'état actuel, on appelle la méthode correspondante
+        switch (currentState)
+        {
+            case EnemyState.Idle:
+                IdleState();
+                break;
+            case EnemyState.Chase:
+                ChaseState();
+                break;
+            case EnemyState.Attack:
+                AttackState();
+                break;
+            case EnemyState.Dead:
+                // En général, on ne fait rien en "Dead" à part éventuellement un timer
+                // pour détruire l’ennemi ou le remettre au pool.
+                break;
+        }
     }
 
     private void UpdateAnimator()
     {
         if (animator != null)
         {
-            animator.SetFloat("Speed", speed);
+            // On peut lier la vitesse ou d'autres paramètres à l’animator
+            animator.SetFloat("Speed", (currentState == EnemyState.Chase) ? speed : 0f);
         }
     }
 
-    public void MoveTowardsPlayer()
+    // --- Implémentation des comportements par état ---
+    private void IdleState()
     {
-        if (player != null)
+        if (player == null) return;
+
+        // Vérifie la distance du joueur
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer < detectionRange)
         {
-            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-            if (distanceToPlayer > 0.1f)
-            {
-                Vector3 direction = (player.position - transform.position).normalized;
-                transform.position += direction * speed * Time.deltaTime;
-                // Regarde le joueur
-                transform.LookAt(player);
-            }
+            // Passe en état Chase
+            SwitchState(EnemyState.Chase);
         }
     }
 
-    // Méthode pour réduire la santé et gérer la destruction de l'ennemi
+    private void ChaseState()
+    {
+        if (player == null)
+        {
+            SwitchState(EnemyState.Idle);
+            return;
+        }
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer <= attackRange)
+        {
+            // Passe en état Attack
+            SwitchState(EnemyState.Attack);
+        }
+        else
+        {
+            // Continue de se déplacer vers le joueur
+            Vector3 direction = (player.position - transform.position).normalized;
+            transform.position += direction * speed * Time.deltaTime;
+            transform.LookAt(player);
+        }
+    }
+
+    private void AttackState()
+    {
+        if (player == null)
+        {
+            SwitchState(EnemyState.Idle);
+            return;
+        }
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        // Si le joueur s'éloigne, on repasse en Chase
+        if (distanceToPlayer > attackRange)
+        {
+            SwitchState(EnemyState.Chase);
+            return;
+        }
+
+        // Sinon, on attaque régulièrement
+        if (Time.time >= lastAttackTime + attackSpeed)
+        {
+            StartCoroutine(PerformAttack());
+        }
+    }
+
+    // --- Attaque au joueur ---
+    private System.Collections.IEnumerator PerformAttack()
+    {
+        PlayerManager.Instance.TakeDamage(damageToPlayer);
+        lastAttackTime = Time.time;
+        Debug.Log($"Enemy hit the player, dealt {damageToPlayer} damage.");
+        yield return new WaitForSeconds(attackSpeed);
+        // Une fois le cooldown fini, l'ennemi peut réattaquer si toujours en AttackState
+    }
+
+    // --- Prendre des dégâts ---
     public void TakeDamage(float damage)
     {
         health -= damage;
-        if (health <= 0)
+        
+        if (health <= 0 && currentState != EnemyState.Dead)
         {
-           HandleDeath();
+            SwitchState(EnemyState.Dead);
+            HandleDeath();
         }
         else
         {
@@ -109,37 +223,11 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void PlayHitParticles()
-    {
-        ParticleUtils.PlayBloodParticles(transform.position, 2, 8);
-    }
-    
-    private void PlayDeathParticles()
-    {
-       ParticleUtils.PlayBloodParticles(transform.position, 20, 40);
-    }
-
-    private void HandleDeath()
-    {
-        soundManager.PlayEnemyDeathSound();
-        PlayDeathParticles();
-        gameObject.SetActive(false); // Ajoute l'ennemi au pool pour réutilisation
-
-        // Calcul de la probabilité d'apparition d'un cube rare
-        float randomChance = UnityEngine.Random.value;
-        if (randomChance <= dropChance)
-        {
-            ExperienceCubeSpawner.Instance.SpawnRareExperienceCube(transform.position, expAmount); // Valeur d'XP du cube rare
-        }
-    }
-    
     private System.Collections.IEnumerator ShowDamageEffect()
     {
         PlayHitParticles();
-        bodyRenderer.material.color = damageColor;
-        headRenderer.material.color = damageColor;
 
-        //change la couleur de tous des materiaux des SkinnedMeshRenderer
+        // Change la couleur de tous les matériaux des SkinnedMeshRenderer
         foreach (Material mat in bodyRenderer.materials)
         {
             mat.color = damageColor;
@@ -151,7 +239,7 @@ public class Enemy : MonoBehaviour
 
         yield return new WaitForSeconds(damageColorDuration);
 
-        // Restaurer la couleur originale
+        // Restaure la couleur originale
         for (int i = 0; i < bodyRenderer.materials.Length; i++)
         {
             bodyRenderer.materials[i].color = originalColor_body[i];
@@ -161,16 +249,52 @@ public class Enemy : MonoBehaviour
             headRenderer.materials[i].color = originalColor_head[i];
         }
     }
-    
+
+    // --- Gestion de la mort ---
+    private void HandleDeath()
+    {
+        soundManager.PlayEnemyDeathSound();
+        PlayDeathParticles();
+        gameObject.SetActive(false); // Ajoute l’ennemi au pool pour réutilisation, ou le détruit
+
+        // Calcul de la chance de drop
+        float randomChance = UnityEngine.Random.value;
+        if (randomChance <= dropChance)
+        {
+            // Spawn d’un cube rare avec la valeur d’XP
+            ExperienceCubeSpawner.Instance.SpawnRareExperienceCube(transform.position, expAmount);
+        }
+    }
+
+    // --- Particules ---
+    private void PlayHitParticles()
+    {
+        ParticleUtils.PlayBloodParticles(transform.position, 2, 8);
+    }
+    private void PlayDeathParticles()
+    {
+        ParticleUtils.PlayBloodParticles(transform.position, 20, 40);
+    }
+
+    // --- Changement d’état ---
+    private void SwitchState(EnemyState newState)
+    {
+        // On pourrait avoir un OnExitState / OnEnterState si besoin
+        currentState = newState;
+    }
+
+    // --- Gestion des triggers (Optionnel, si on préfère attaquer via collisions) ---
+    // Ici, on peut simplement faire des transitions vers Attack si on veut un comportement
+    // identique à votre code d’origine avec OnTriggerEnter / OnTriggerStay.
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")) // Assurez-vous que le joueur a le tag "Player"
+        if (other.CompareTag("Player"))
         {
-            if (Time.time >= lastAttackTime + attackSpeed)
+            // Si vous préférez, vous pouvez forcer l’état Attack ici :
+            if (currentState != EnemyState.Attack && currentState != EnemyState.Dead)
             {
-                PlayerManager.Instance.TakeDamage(damageToPlayer);
-                lastAttackTime = Time.time;
-                Debug.Log($"Enemy hit the player, dealt {damageToPlayer} damage.");
+                SwitchState(EnemyState.Attack);
             }
         }
     }
@@ -179,26 +303,21 @@ public class Enemy : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (Time.time >= lastAttackTime + attackSpeed)
+            // Même logique, forcer Attack si l’ennemi n’est pas mort
+            if (currentState != EnemyState.Attack && currentState != EnemyState.Dead)
             {
-                StartCoroutine(AttackPlayer());
+                SwitchState(EnemyState.Attack);
             }
         }
     }
 
-    private System.Collections.IEnumerator AttackPlayer()
-    {
-        PlayerManager.Instance.TakeDamage(damageToPlayer);
-        lastAttackTime = Time.time;
-        Debug.Log($"Enemy hit the player, dealt {damageToPlayer} damage.");
-        yield return new WaitForSeconds(attackSpeed);
-    }
-
-
-    // Gizmos pour visualiser la portée de spawn des ennemis
+    // Gizmos pour visualiser la zone de l’ennemi (optionnel)
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, 3f);
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
     }
 }
