@@ -739,7 +739,7 @@ MonoBehaviour:
   - menu: {fileID: 1266257378}
     firstSelected: {fileID: 1028025440}
   - menu: {fileID: 99693496}
-    firstSelected: {fileID: 1275996085}
+    firstSelected: {fileID: 1188786312}
   highScoreText: {fileID: 628311335}
   eventSystem: {fileID: 282939039}
 --- !u!1001 &226966839
