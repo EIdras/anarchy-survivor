@@ -8039,6 +8039,7 @@ GameObject:
   - component: {fileID: 1607862365}
   - component: {fileID: 1607862367}
   - component: {fileID: 1607862368}
+  - component: {fileID: 1607862369}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -8146,6 +8147,19 @@ MonoBehaviour:
     baseDamage: 8
     expSpawnChance: 0.05
     expAmount: 50
+--- !u!114 &1607862369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607862364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37f0ad64385f2884c848678eb4fd3b7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthPackPrefab: {fileID: 1115492727045992116, guid: e5863fed67a9df54c8a939f418291f0e, type: 3}
 --- !u!4 &1623848544 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 09fb30255db1db34a8683a088b07e4be, type: 3}
@@ -9337,8 +9351,6 @@ MonoBehaviour:
   - {fileID: 919132149155446097, guid: c7d343b0c47a5284890a9c32381a3174, type: 3}
   - {fileID: 919132149155446097, guid: a7af749073313814d92352753fac3b23, type: 3}
   - {fileID: 919132149155446097, guid: f20090f9093657b42854e517b7e6c3d0, type: 3}
-  - {fileID: 919132149155446097, guid: 57845e30c92aaa74d96008627e4e7e33, type: 3}
-  - {fileID: 919132149155446097, guid: a991c11f7f28bf14d9cc588b13b941f8, type: 3}
   - {fileID: 919132149155446097, guid: 9d9ff60c61590a74b958de1e0483ebc0, type: 3}
   - {fileID: 919132149155446097, guid: 98b935a2b7a7d0f45bef6eda39708c27, type: 3}
   - {fileID: 919132149155446097, guid: ec0979ecd636f2e4fa23ff83ef6ccf6b, type: 3}

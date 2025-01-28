@@ -20,7 +20,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float damageToPlayer = 10f;
     [SerializeField] private float attackSpeed = 1f;
     [SerializeField] private float damageColorDuration = 0.2f;
-    [SerializeField] private float dropChance = 0.1f;
+    [SerializeField] private float expDropChance = 0.1f;
+    [SerializeField] private float healthDropChance = 0.1f;
     [SerializeField] private int expAmount;
     
     [Header("Distances")]
@@ -62,7 +63,7 @@ public class Enemy : MonoBehaviour
         this.health = health;
         this.speed = speed;
         this.damageToPlayer = damage;
-        this.dropChance = dropChance;
+        this.expDropChance = dropChance;
         this.expAmount = expAmount;
         this.player = player;
 
@@ -259,10 +260,14 @@ public class Enemy : MonoBehaviour
 
         // Calcul de la chance de drop
         float randomChance = UnityEngine.Random.value;
-        if (randomChance <= dropChance)
+        if (randomChance <= expDropChance)
         {
             // Spawn d’un cube rare avec la valeur d’XP
             ExperienceCubeSpawner.Instance.SpawnRareExperienceCube(transform.position, expAmount);
+        } else if (UnityEngine.Random.value <= healthDropChance)
+        {
+            // Spawn d’un pack de soin
+            HealthPackSpawner.Instance.SpawnPack(transform.position);
         }
     }
 

@@ -11,6 +11,7 @@ public class EnemySpawner : MonoBehaviour
     public float despawnRadius = 60f;    // Rayon de despawn des ennemis 
     public int baseMaxEnemies = 10;      // Limite de base des ennemis
     public float baseSpawnInterval = 2f; // Intervalle de spawn de base
+    public float healthOverTimeMultiplier = 0.1f; // Multiplicateur de vie des ennemis au fil du temps
 
     [System.Serializable]
     public struct EnemyType
@@ -170,7 +171,7 @@ public class EnemySpawner : MonoBehaviour
             headRenderer.materials[2].color = enemyType.color;
 
             enemy.GetComponent<Enemy>().Initialize(
-                enemyType.health + Mathf.FloorToInt(Time.timeSinceLevelLoad * 0.5f), // Augmente la vie au fil du temps
+                enemyType.health + Mathf.FloorToInt(Time.timeSinceLevelLoad * healthOverTimeMultiplier), // Augmente la vie au fil du temps
                 enemyType.speed,
                 enemyType.baseDamage,
                 enemyType.expSpawnChance,
