@@ -67,7 +67,11 @@ public class Enemy : MonoBehaviour
         this.expAmount = expAmount;
         this.player = player;
 
-        InitializeColors();
+        currentState = EnemyState.Chase;
+        RestoreOriginalColors();
+        StopAllCoroutines();
+
+        gameObject.SetActive(true);
     }
 
     private void Start()
@@ -76,24 +80,18 @@ public class Enemy : MonoBehaviour
         currentState = EnemyState.Chase;
     }
 
-    private void InitializeColors()
+    private void RestoreOriginalColors()
     {
-        body = transform.GetChild(0).gameObject;
-        head = transform.GetChild(1).gameObject;
-        bodyRenderer = body.GetComponent<SkinnedMeshRenderer>();
-        headRenderer = head.GetComponent<SkinnedMeshRenderer>();
+        if (originalColor_body == null || originalColor_head == null)
+            return;
 
-        originalColor_body = new List<Color>();
-        originalColor_head = new List<Color>();
-
-        // Enregistrement des couleurs d'origine
-        foreach (Material mat in bodyRenderer.materials)
+        for (int i = 0; i < bodyRenderer.materials.Length; i++)
         {
-            originalColor_body.Add(mat.color);
+            bodyRenderer.materials[i].color = originalColor_body[i];
         }
-        foreach (Material mat in headRenderer.materials)
+        for (int i = 0; i < headRenderer.materials.Length; i++)
         {
-            originalColor_head.Add(mat.color);
+            headRenderer.materials[i].color = originalColor_head[i];
         }
     }
 
@@ -119,8 +117,6 @@ public class Enemy : MonoBehaviour
                 AttackState();
                 break;
             case EnemyState.Dead:
-                // En général, on ne fait rien en "Dead" à part éventuellement un timer
-                // pour détruire l’ennemi ou le remettre au pool.
                 break;
         }
     }
