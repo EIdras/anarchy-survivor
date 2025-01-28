@@ -6,9 +6,15 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance;
 
+    private static SpawnGrenade SpawnGrenade;
+
+
+
     private void Awake()
     {
         Instance = this;
+        //getcomponents SpawnGrenade.cs
+        SpawnGrenade = GetComponent<SpawnGrenade>();
     }
 
     [Header("Options")]
@@ -35,6 +41,12 @@ public class PlayerController : MonoBehaviour
     public PlayerInput GetPlayerInput()
     {
         return playerInput;
+    }
+
+    public void OnFire()
+    {
+        Debug.Log("Fire");
+        SpawnGrenade.ThrowGrenade();
     }
     
     public void OnMove(InputValue move)
