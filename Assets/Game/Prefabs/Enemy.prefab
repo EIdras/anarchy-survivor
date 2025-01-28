@@ -373,7 +373,7 @@ MonoBehaviour:
   attackSpeed: 1
   damageColorDuration: 0.2
   expDropChance: 0.1
-  healthDropChance: 0.9
+  healthDropChance: 0.05
   expAmount: 0
   detectionRange: 10
   attackRange: 1.5

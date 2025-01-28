@@ -40,7 +40,7 @@ public class Enemy : MonoBehaviour
 
     // --- Internes ---
     private float lastAttackTime = 0f;
-    private EnemyState currentState = EnemyState.Idle;
+    private EnemyState currentState = EnemyState.Chase;
 
     // Rendu
     private SkinnedMeshRenderer bodyRenderer;
@@ -177,6 +177,7 @@ public class Enemy : MonoBehaviour
     {
         if (player == null)
         {
+            Debug.LogWarning("Player introuvable, retour à l'état Idle.");
             SwitchState(EnemyState.Idle);
             return;
         }

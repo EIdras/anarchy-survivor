@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class RotateArrow : MonoBehaviour
 {
-    public Transform player;  // Le joueur, ou l'objet qui regarde dans une direction
-    public float angleOffset = 0; // Offset d'angle pour la flèche
+    public Transform player;
+    public float angleOffset = 0;
 
     void Update()
     {
