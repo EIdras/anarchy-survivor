@@ -19,9 +19,10 @@ public class HealthPackSpawner : MonoBehaviour
         }
     }
 
-    public void SpawnPack(Vector2 position2D)
+    public void SpawnPack(Vector3 position)
     {
-        GameObject pack = Instantiate(healthPackPrefab, position2D, Quaternion.identity);
+        position.y = 0f;
+        GameObject pack = Instantiate(healthPackPrefab, position, Quaternion.identity);
     }
 
     public void DestroyPack(GameObject pack)

@@ -143,7 +143,8 @@ public class ExperienceCubeSpawner : MonoBehaviour
 
             // Configure le type de cube
             CubeType cubeType = GetRandomCubeType();
-            cube.GetComponent<Renderer>().material.color = cubeType.color;
+            Material cubeMaterial = cube.GetComponent<Renderer>().material;
+            updateMaterialColor(cubeMaterial, cubeType.color);
             cube.GetComponent<ExperienceCube>().SetExperienceValue(cubeType.experienceValue);
 
             // Place le cube sur le plan XZ
@@ -243,7 +244,7 @@ public class ExperienceCubeSpawner : MonoBehaviour
         Renderer renderer = cube.GetComponent<Renderer>();
         if (renderer != null)
         {
-            renderer.material.color = rareCubeColor; // Couleur pour les cubes rares
+            updateMaterialColor(renderer.material, rareCubeColor);
         }
 
         // Place le cube
@@ -252,6 +253,14 @@ public class ExperienceCubeSpawner : MonoBehaviour
 
         // Ajoute le cube à la liste des cubes actifs
         activeCubes.Add(cube);
+    }
+
+    private void updateMaterialColor(Material material, Color color)
+    {
+        Color colorTransparent = new Color(color.r, color.g, color.b, 0.5f);
+        material.SetColor("_Color", color);
+        material.SetColor("_FirstOutlineColor", colorTransparent);
+        material.SetColor("_SecondOutlineColor", Color.white);
     }
 
 }

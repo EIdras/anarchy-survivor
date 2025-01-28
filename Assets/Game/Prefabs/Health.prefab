@@ -28,8 +28,8 @@ Transform:
   m_GameObject: {fileID: 1115492727045992116}
   serializedVersion: 2
   m_LocalRotation: {x: -0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 120.00001, y: 120.00001, z: 120.00001}
+  m_LocalPosition: {x: 0, y: 0.25, z: 0}
+  m_LocalScale: {x: 160, y: 160, z: 160}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -98,3 +98,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc72fb39b7c6f294db8a0b04932eea34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attractionSpeed: 10
+  minDistanceToCollect: 0.5
+  healAmount: 20

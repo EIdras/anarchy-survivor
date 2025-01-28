@@ -367,8 +367,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ce3042480ee62c45902268d7afdc9ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageColor: {r: 1, g: 0, b: 0, a: 1}
+  health: 0
+  speed: 0
+  damageToPlayer: 10
+  attackSpeed: 1
   damageColorDuration: 0.2
+  expDropChance: 0.1
+  healthDropChance: 0.9
+  expAmount: 0
+  detectionRange: 10
+  attackRange: 1.5
+  damageColor: {r: 1, g: 0, b: 0, a: 1}
   animator: {fileID: 6651068405614040843}
 --- !u!65 &7422939323100699828
 BoxCollider:

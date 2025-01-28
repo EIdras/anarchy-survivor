@@ -8125,6 +8125,7 @@ MonoBehaviour:
   despawnRadius: 60
   baseMaxEnemies: 10
   baseSpawnInterval: 2
+  healthOverTimeMultiplier: 0.1
   enemyTypes:
   - health: 10
     speed: 2
@@ -12216,6 +12217,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1251202199706494514}
   - component: {fileID: 4479306362821030234}
+  - component: {fileID: 4479306362821030235}
   m_Layer: 3
   m_Name: Body
   m_TagString: Untagged
@@ -13498,6 +13500,18 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.0011728164, y: 0.010045913, z: 0.0013833651}
     m_Extent: {x: 0.00836978, y: 0.010913107, z: 0.0061449655}
   m_DirtyAABB: 0
+--- !u!114 &4479306362821030235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2331146337126811744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23446be54c206b244856ba9958005c4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4505707046314711140
 Transform:
   m_ObjectHideFlags: 0

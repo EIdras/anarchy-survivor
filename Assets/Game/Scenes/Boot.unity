@@ -256,8 +256,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 705, y: -135.7}
-  m_SizeDelta: {x: 447.587, y: 361.4622}
+  m_AnchoredPosition: {x: 686.6239, y: -135.85}
+  m_SizeDelta: {x: 484.3392, y: 361.4622}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &417425402
 MonoBehaviour:
@@ -290,7 +290,10 @@ MonoBehaviour:
     https://opengameart.org/content/mythica
 
 
-    https://github.com/googlefonts/noto-emoji'
+    https://github.com/googlefonts/noto-emoji
+
+
+    https://github.com/Shrimpey/UltimateOutline'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e6fbb007a88e73940ad47f85899d0356, type: 2}
   m_sharedMaterial: {fileID: 6560974666962502765, guid: e6fbb007a88e73940ad47f85899d0356, type: 2}
@@ -428,7 +431,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Thanks to :\n\nQuaternius\t- Assets pack \"Toon Shooter Game Kit\"\ncynicmusic
     \t- Game music \"Awake (Megawall-10)\"\ncongusbongus \t- Menu music \"Mythica\"
-    \nGoogle Fonts \t- Emoji font \"Noto Color Emoji\""
+    \nGoogle Fonts \t- Emoji font \"Noto Color Emoji\"\nShrimpey\t\t- Outline Shader
+    \"UltimateOutline\""
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e6fbb007a88e73940ad47f85899d0356, type: 2}
   m_sharedMaterial: {fileID: 6560974666962502765, guid: e6fbb007a88e73940ad47f85899d0356, type: 2}
