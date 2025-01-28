@@ -45,7 +45,6 @@ public class PlayerController : MonoBehaviour
 
     public void OnFire()
     {
-        Debug.Log("Fire");
         SpawnGrenade.ThrowGrenade();
     }
     

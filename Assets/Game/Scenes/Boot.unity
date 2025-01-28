@@ -205,6 +205,7 @@ MonoBehaviour:
   enemyDeathClip: {fileID: 8300000, guid: b9ffeef3112dc924489680c2ee577bdc, type: 3}
   playerDeathClip: {fileID: 8300000, guid: f43a6de678213ea41ad7e026d71f5b26, type: 3}
   shieldBrokenClip: {fileID: 8300000, guid: d48fd76e031f9c6499bdecd74a4597d5, type: 3}
+  grenadeExplosionClip: {fileID: 8300000, guid: d5f36fec4edd1734b8c4f793257e598d, type: 3}
   gameMusic: {fileID: 8300000, guid: 8b1022042a059944f9f8247298c3e89d, type: 3}
   menuMusic: {fileID: 8300000, guid: 223c47b124cfc124eab7ce1a8f8b4f9f, type: 3}
 --- !u!4 &52335136

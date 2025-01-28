@@ -8,12 +8,15 @@ public class Grenade : MonoBehaviour
     public float explosionDamage = 5f; 
 
     [Header("Effets visuels et sonores")]
-    public GameObject explosionEffect; 
+    public GameObject explosionEffect;
+
+    public SoundManager soundManager;
 
     private bool hasExploded = false;
 
     private void Start()
     {
+        soundManager = SoundManager.Instance;
         // Lancer le compte à rebours de l'explosion
         Invoke("Explode", explosionDelay);
     }
@@ -28,6 +31,7 @@ public class Grenade : MonoBehaviour
         {
             Instantiate(explosionEffect, transform.position, Quaternion.identity);
         }
+        soundManager.PlayGrenadeExplosionSound();
 
         // Détecter tous les objets dans la zone d'explosion
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius);

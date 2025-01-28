@@ -16,6 +16,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip enemyDeathClip;
     [SerializeField] private AudioClip playerDeathClip;
     [SerializeField] private AudioClip shieldBrokenClip;
+    [SerializeField] private AudioClip grenadeExplosionClip;
     [SerializeField] private AudioClip gameMusic;
     [SerializeField] private AudioClip menuMusic;
 
@@ -113,7 +114,12 @@ public class SoundManager : MonoBehaviour
     {
         PlayPlayerSound(playerDeathClip);
     }
-    
+
+    public void PlayGrenadeExplosionSound()
+    {
+        PlaySound(grenadeExplosionClip);
+    }
+
     public void SetMusicVolume(float volume)
     {
         musicSource.volume = volume;

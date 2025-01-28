@@ -8483,6 +8483,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4470738211313411841, guid: aa76a7bd0b3ea884083b71ee83494c1e, type: 3}
+      propertyPath: m_fontSize
+      value: 55.89
+      objectReference: {fileID: 0}
+    - target: {fileID: 4470738211313411841, guid: aa76a7bd0b3ea884083b71ee83494c1e, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 55.89
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
