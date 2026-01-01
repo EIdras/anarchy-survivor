@@ -1,6 +1,12 @@
 # Anarchy Survivor
  Anarchy survivor is a Vampire Survivor like shooter game, created in Unity 2022.
 
+## Screenshots
+
+| Menu | Gameplay | Powerups |
+| :---: | :---: | :---: |
+| <img src="./readme-images/menu.png" width="400" alt="Menu" /> | <img src="./readme-images/gameplay.jpg" width="400" alt="Gameplay" /> | <img src="./readme-images/powerups.png" width="400" alt="Powerups" /> |
+
 ### Project developed by :
 - Erhan AKYÜZ - eakyuz@et.esiea.fr
 - Simon BRAULT - sbrault@et.esiea.fr
